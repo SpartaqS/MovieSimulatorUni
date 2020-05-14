@@ -1,0 +1,14 @@
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+Debug/
+EOOP-PROJECT/
+Release/
+*.o
+*.o
+*.o
+src/movement_loop.o
+src/game_logic.o
+.DS_Store
