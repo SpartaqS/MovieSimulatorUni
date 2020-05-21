@@ -16,11 +16,11 @@ Director::Director(const Director& director)
 	wp_MovieList::iterator MovieListIter;
 	for (MovieListIter = portfolio.begin(); MovieListIter != portfolio.end(); MovieListIter++)
 	{
-		MovieListIter->lock()->employ(std::make_shared<Director>(*this));
+		//MovieListIter->lock()->employ(std::make_shared<Director>(*this));
 	}
 }
 
-Director::~Director()
+/*Director::~Director()
 {
 	//empty because Base Destructor takes care of everything
-}
+}*/

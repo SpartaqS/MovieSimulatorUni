@@ -10,10 +10,12 @@
 #include <set>
 #include "movie.hpp"
 
+//using string = std::string;
+
 using sp_Person = std::shared_ptr<Person>;
-//using sp_PersonsList = std::list<sp_Person>;
+using sp_PersonsSet = std::set<sp_Person>;
 using wp_Person = std::weak_ptr<Person>;
-using wp_PersonsSet = std::set<wp_Person>;
+//using wp_PersonsSet = std::set<wp_Person>;
 
 class Person
 {
@@ -30,5 +32,6 @@ public:
 protected:
 	string name;
 	wp_MovieList portfolio;
+	void joinAllMovies();
 };
 #endif // !person_hpp

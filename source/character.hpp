@@ -15,7 +15,7 @@ using sp_CharactersVector = std::vector<sp_Character>;
 class Character
 {
 public:
-	Character(const string &given_name); //constructor
+	Character(const string &c_name, const string &c_descr); //constructor
 	Character(const Character& character); // copy constructor
 	Character& operator=(const Character& character); //assignment operator
 	~Character(); //destructor -> calls parent movie to handle the problem
