@@ -27,7 +27,7 @@ Person& Person::operator=(const Person& person)
 Person::~Person()
 { 
 	// "get fired" from all movies
-	wp_MovieList::iterator MovieListIter;
+	sp_MovieList::iterator MovieListIter;
 	/*for (MovieListIter = portfolio.end(); MovieListIter != portfolio.begin(); MovieListIter--)
 	{
 		// quitMovie()
@@ -41,9 +41,8 @@ void Person::quitMovie(string m_name)
 
 void Person::joinAllMovies()
 {
-	wp_MovieList::iterator MovieListIter;
-	for (MovieListIter = portfolio.begin(); MovieListIter != portfolio.end(); MovieListIter++)
+	for (sp_Movie selected : portfolio)
 	{
-		(*MovieListIter)->employ(this);
+		(*selected)->employ(this);
 	}
 }

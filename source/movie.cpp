@@ -7,6 +7,7 @@ Movie::Movie(const Movie & movie) : title(movie.title) , genre(movie.genre) {}
 Movie & Movie::operator=(const Movie & movie)
 {
 	// TODO: tu wstawiæ instrukcjê return
+	return *this;
 }
 
 Movie::~Movie()
@@ -85,4 +86,10 @@ void Movie::setTitle(const string & m_new_title)
 void Movie::setGenre(const string & m_new_genre)
 {
 	genre = m_new_genre;
+}
+
+ostream & operator<<(ostream & os, const Movie & m)
+{
+	// TODO: tu wstawiæ instrukcjê return
+	return os;
 }

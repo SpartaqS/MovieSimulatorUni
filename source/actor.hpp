@@ -7,9 +7,6 @@
 
 #include "person.hpp"
 
-using sp_Actor = std::shared_ptr<Actor>;
-using wp_ActorsList = std::list<std::weak_ptr<Actor>>;
-
 class Actor : public Person
 {
 public:
@@ -18,4 +15,8 @@ public:
 	//Actor& operator=(const Actor& actor); //assignment operator
 	//virtual ~Actor(); // destructor -> calls all portfolio movies to act accordingly
 };
+
+using sp_Actor = std::shared_ptr<Actor>;
+using wp_ActorsList = std::list<std::weak_ptr<Actor>>;
+
 #endif // !actor_hpp

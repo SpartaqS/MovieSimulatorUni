@@ -8,14 +8,13 @@
 #include <list>
 #include <vector>
 #include <set>
-#include "movie.hpp"
+//#include "movie.hpp"
 
-//using string = std::string;
+class Movie;
+using sp_Movie = std::shared_ptr<Movie>;
+using sp_MovieList = std::list<sp_Movie>;
 
-using sp_Person = std::shared_ptr<Person>;
-using sp_PersonsSet = std::set<sp_Person>;
-using wp_Person = std::weak_ptr<Person>;
-//using wp_PersonsSet = std::set<wp_Person>;
+using string = std::string;
 
 class Person
 {
@@ -27,11 +26,17 @@ public:
 	virtual ~Person(); // destructor -> calls all portfolio movies to act accordingly
 	void quitMovie(string m_name); // resign from acting in a movie (calls a particular movie to execute correct methods)
 	string getName() const { return name; }; // name getter
-	wp_MovieList getPortfolio() const { return portfolio; }; // portfolio getter
+	sp_MovieList getPortfolio() const { return portfolio; }; // portfolio getter
 	//friend std::ostream& operator<<(std::ostream& os, const Character& character); // return name as ostream&
 protected:
 	string name;
-	wp_MovieList portfolio;
+	sp_MovieList portfolio;
 	void joinAllMovies();
 };
+
+using sp_Person = std::shared_ptr<Person>;
+using sp_PersonsSet = std::set<sp_Person>;
+using wp_Person = std::weak_ptr<Person>;
+//using wp_PersonsSet = std::set<wp_Person>;
+
 #endif // !person_hpp

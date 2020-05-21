@@ -6,10 +6,6 @@
 #ifndef movie_hpp
 #define movie_hpp
 
-using string = std::string;
-using sp_Movie = std::shared_ptr<Movie>;
-using wp_MovieList = std::list<sp_Movie>;
-
 #include "scene.hpp"
 
 class Movie
@@ -25,7 +21,6 @@ public:
 	/* Actor Management */
 	void actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2); // swap all occurences of actor1 and actor2 in characters (list)
 	/* Character Management */
-	void createCharacter(const string& c_name,const string& c_description); // a more specific method, basically taking arguments of a constructor
 	void create(const Character& character); // overloaded method "create" for adding new Character
 	//create a new character, if there exists a character with name == c_name : force rename the new character
 	void characterDelete(const string& c_name); // delete a character, if there is no character with name == c_name : throw exception
@@ -55,4 +50,10 @@ private:
 	sp_CharactersVector characters;
 	sp_PersonsSet team;
 };
+
+
+using string = std::string;
+//using sp_Movie = std::shared_ptr<Movie>;
+//using sp_MovieList = std::list<sp_Movie>;
+
 #endif // !movie_hpp

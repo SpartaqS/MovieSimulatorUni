@@ -8,10 +8,6 @@
 
 #include "actor.hpp"
 
-using sp_Character = std::shared_ptr<Character>;
-using sp_CharactersVector = std::vector<sp_Character>;
-
-
 class Character
 {
 public:
@@ -33,5 +29,8 @@ private:
 	string description;
 	wp_ActorsList actors;
 };
+
+using sp_Character = std::shared_ptr<Character>;
+using sp_CharactersVector = std::vector<sp_Character>;
 
 #endif // !character_hpp

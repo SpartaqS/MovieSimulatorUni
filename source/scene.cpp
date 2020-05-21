@@ -66,27 +66,14 @@ void Scene::replace(unsigned int number, sp_Character withWhom)
 		//throw std::invalid_argument("Action::replace(unsigned int number, shared_ptr<character> withWhom) : provided number out of range, doing nothing");
 }
 
-void Scene::directorAdd(wp_Director director)
-{
-	scene_directors.push_back(director);
-}
 void Scene::directorAdd(sp_Director director)
 {
-	wp_Director wp_dir;
-	wp_dir = director; // apparently no definition of changing shared_ptr into weak if I assign in the line above
-	scene_directors.push_back(wp_dir);
-}
-
-void Scene::directorRemove(wp_Director director)
-{
-	scene_directors.remove(director);
+	scene_directors.push_back(director);
 }
 
 void Scene::directorRemove(sp_Director director)
 {
-	std::weak_ptr<Director> wp_dir = std::shared_ptr<Director>(director);
-	//wp_dir = director; // apparently no definition of changing shared_ptr into weak if I assign in the line above
-	scene_directors.remove(wp_dir);
+	scene_directors.remove(director);
 }
 
 size_t Scene::charactersInDescription()

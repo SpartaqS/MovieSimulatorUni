@@ -2,11 +2,11 @@
 	Gabriel Skowron-Rodriguez */
 
 #include <iostream>
-#include "person.hpp"
+#include "movie.hpp"
 
 int main()
 {
+	Movie movie1("Test Title", "DevStuffGenre");
 	movie1.create(Character("Tom", "description")); // LETS USE THE EXISTING ONE
-	movie1.createCharacter("Tom", "description");
 	return 0;
 }
