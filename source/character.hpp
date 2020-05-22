@@ -19,15 +19,15 @@ public:
 	void modifyDescription(const string &new_c_descr); // modify the description of a character, if there is no character wiht name == c_name : throw exception
 	void addActor(const sp_Actor new_c_actor); // add a new_c_actor to the end of list of actors, if new_c_actor is already there : throw exception
 	void replaceActor(const sp_Actor old_c_actor, const sp_Actor new_c_actor); // replace old_c_actor with new_c_actor
-	void removeActor(const sp_Actor c_actor); // remove a c_actor from the list of actors, if there is no c_actor  : throw exception
+	void removeActor(const sp_Actor c_actor); // remove a c_actor from the list of actors, if there is no c_actor  : do nothing
 	string getName() const { return name; }; // name getter
 	string getDescription() const { return description; }; // description getter
-	wp_ActorsList getActorsList() const { return actors; }; // actors list getter
+	sp_ActorsList getActorsList() const { return actors; }; // actors list getter
 	size_t getActorsCount() const { return actors.size(); }; // get how many actors play that character
 private:
 	string name;
 	string description;
-	wp_ActorsList actors;
+	sp_ActorsList actors; // no copies of any Actor are allowed (this is not a std::set because order matters)
 };
 
 using sp_Character = std::shared_ptr<Character>;

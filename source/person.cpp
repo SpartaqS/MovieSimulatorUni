@@ -1,4 +1,5 @@
 #include "person.hpp"
+#include "movie.hpp"
 
 Person::Person()
 {
@@ -22,6 +23,7 @@ Person& Person::operator=(const Person& person)
 	portfolio = person.portfolio;
 	// employ this into all movies that person is working on
 	joinAllMovies();
+	return *this;
 }
 
 Person::~Person()
@@ -43,6 +45,6 @@ void Person::joinAllMovies()
 {
 	for (sp_Movie selected : portfolio)
 	{
-		(*selected)->employ(this);
+		selected->employ(std::make_shared<Person>(*this));
 	}
 }

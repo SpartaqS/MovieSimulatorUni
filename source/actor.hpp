@@ -17,6 +17,6 @@ public:
 };
 
 using sp_Actor = std::shared_ptr<Actor>;
-using wp_ActorsList = std::list<std::weak_ptr<Actor>>;
+using sp_ActorsList = std::list<sp_Actor>;
 
 #endif // !actor_hpp

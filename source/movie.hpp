@@ -6,6 +6,7 @@
 #ifndef movie_hpp
 #define movie_hpp
 
+#include <exception>
 #include "scene.hpp"
 
 class Movie
@@ -21,12 +22,12 @@ public:
 	/* Actor Management */
 	void actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2); // swap all occurences of actor1 and actor2 in characters (list)
 	/* Character Management */
-	void create(const Character& character); // overloaded method "create" for adding new Character
+	void create(Character& character); // overloaded method "create" for adding new Character
 	//create a new character, if there exists a character with name == c_name : force rename the new character
 	void characterDelete(const string& c_name); // delete a character, if there is no character with name == c_name : throw exception
 	sp_Character character(const string& c_name); // get shared pointer to a Character, if there is no character with name == c_name : throw exception
 	/* Scene Management */ // <-- those could be overloaded to use scene numbers too but not sure if that's needed 
-	void create(const Scene& scene); // create a new scene at the end of the scenario, if there exists a scene with the same name: force rename the new scene
+	void create(Scene& scene); // create a new scene at the end of the scenario, if there exists a scene with the same name: force rename the new scene
 	void sceneDelete(const string& s_name); // delete a scene from the scenario, if there is no scene with name == s_name : throw exception
 	void sceneDelete(const unsigned int& number ); //delete number-th scene from the scenario, if out of range : throw exception
 	void sceneSwap(const string& s1_name, const string& s2_name); // swap order of scenes s1 and s2, if at least one s_name is invalid : throw exception
@@ -49,6 +50,7 @@ private:
 	sp_ScenesList scenario;
 	sp_CharactersVector characters;
 	sp_PersonsSet team;
+	bool findDuplicateCharacterByName(string c_name, unsigned int copy_num);
 };
 
 

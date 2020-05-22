@@ -8,6 +8,8 @@
 #include <list>
 #include <vector>
 #include <set>
+
+#include <exception>
 //#include "movie.hpp"
 
 class Movie;
@@ -38,5 +40,7 @@ using sp_Person = std::shared_ptr<Person>;
 using sp_PersonsSet = std::set<sp_Person>;
 using wp_Person = std::weak_ptr<Person>;
 //using wp_PersonsSet = std::set<wp_Person>;
+
+//#include "movie.hpp" // ????
 
 #endif // !person_hpp
