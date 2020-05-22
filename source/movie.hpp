@@ -23,11 +23,11 @@ public:
 	void actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2); // swap all occurences of actor1 and actor2 in characters (list)
 	/* Character Management */
 	void create(Character& character); // overloaded method "create" for adding new Character
-	//create a new character, if there exists a character with name == c_name : force rename the new character
-	void characterDelete(const string& c_name); // delete a character, if there is no character with name == c_name : throw exception
+	//create a new character, if there exists a character with name == c_name : force setName the new character
+	void remove(sp_Character character); // delete a character, if there is no character with name == c_name : throw exception
 	sp_Character character(const string& c_name); // get shared pointer to a Character, if there is no character with name == c_name : throw exception
 	/* Scene Management */ // <-- those could be overloaded to use scene numbers too but not sure if that's needed 
-	void create(Scene& scene); // create a new scene at the end of the scenario, if there exists a scene with the same name: force rename the new scene
+	void create(Scene& scene); // create a new scene at the end of the scenario, if there exists a scene with the same name: force setName the new scene
 	void sceneDelete(const string& s_name); // delete a scene from the scenario, if there is no scene with name == s_name : throw exception
 	void sceneDelete(const unsigned int& number ); //delete number-th scene from the scenario, if out of range : throw exception
 	void sceneSwap(const string& s1_name, const string& s2_name); // swap order of scenes s1 and s2, if at least one s_name is invalid : throw exception
@@ -42,15 +42,17 @@ public:
 	string getGenre() const { return genre; }; // genre getter
 	void setGenre(const string& m_new_genre); // genre setter
 	sp_ScenesList getScenario() { return scenario; }; //scenario (scene list) getter
-	sp_CharactersVector getCharacters() { return characters; }; // characters getter
+	sp_CharactersList getCharacters() { return characters; }; // characters getter
 	sp_PersonsSet getCast() { return team; }; // team (person list) getter
 private:
 	string title;
 	string genre;
 	sp_ScenesList scenario;
-	sp_CharactersVector characters;
+	sp_CharactersList characters;
 	sp_PersonsSet team;
 	bool findDuplicateCharacterByName(string c_name, unsigned int copy_num);
+	bool findDuplicateSceneByName(string s_name, unsigned int copy_num);
+	bool findCharacterInScenario(const string& c_name);
 };
 
 

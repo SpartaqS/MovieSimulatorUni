@@ -15,12 +15,12 @@ Character::~Character()
 	// call parent movie to delete the character
 }
 
-void Character::rename(const string & new_c_name)
+void Character::setName(const string & new_c_name)
 {
 	name = new_c_name;
 }
 
-void Character::modifyDescription(const string & new_c_descr)
+void Character::setDescription(const string & new_c_descr)
 {
 	description = new_c_descr;
 }

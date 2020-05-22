@@ -15,8 +15,8 @@ public:
 	Character(const Character& character); // copy constructor
 	Character& operator=(const Character& character); //assignment operator
 	~Character(); //destructor -> calls parent movie to handle the problem
-	void rename(const string &new_c_name); // change the name of a character, if there is no character with name == c_name : throw exception
-	void modifyDescription(const string &new_c_descr); // modify the description of a character, if there is no character wiht name == c_name : throw exception
+	void setName(const string &new_c_name); // change the name of a character, if there is no character with name == c_name : throw exception
+	void setDescription(const string &new_c_descr); // modify the description of a character, if there is no character wiht name == c_name : throw exception
 	void addActor(const sp_Actor new_c_actor); // add a new_c_actor to the end of list of actors, if new_c_actor is already there : throw exception
 	void replaceActor(const sp_Actor old_c_actor, const sp_Actor new_c_actor); // replace old_c_actor with new_c_actor
 	void removeActor(const sp_Actor c_actor); // remove a c_actor from the list of actors, if there is no c_actor  : do nothing
@@ -31,6 +31,7 @@ private:
 };
 
 using sp_Character = std::shared_ptr<Character>;
+using sp_CharactersList = std::list<sp_Character>;
 using sp_CharactersVector = std::vector<sp_Character>;
 
 #endif // !character_hpp

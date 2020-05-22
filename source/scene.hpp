@@ -15,6 +15,7 @@ class Scene
 {
 public:
 	Scene(const string &s_name, const string &s_desc, sp_Director director, sp_CharactersVector & characters); // constructor (with Characters_
+	// might want to create a constructor using CharacterList
 	Scene(const string &s_name, const string &s_desc, sp_Director director); // constructor (without Characters)
 	Scene(const Scene& scene); // copy constructor
 	Scene& operator=(const Scene& scene); //assignment operator

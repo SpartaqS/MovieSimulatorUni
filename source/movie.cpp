@@ -34,19 +34,32 @@ void Movie::actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2)
 void Movie::create(Character & character)
 {
 	unsigned int search_tries = 0;
-	// TO DO try to find a character with the same name as new one, if found: rename new character and try to find it again
 	while (findDuplicateCharacterByName(character.getName(), search_tries))
 	{
 		++search_tries;
 	}
-	if (search_tries > 0)
-		character.rename(character.getName().append(std::to_string(search_tries)));
-
+	if (search_tries > 0) // renaming the character if found at least one with the same name
+		character.setName(character.getName().append(std::to_string(search_tries)));
 	characters.push_back(std::make_shared<Character>(character));
 }
 
-void Movie::characterDelete(const string & c_name)
+void Movie::remove(sp_Character character)
 {
+	if (findCharacterInScenario(character->getName()))
+	{
+		unsigned int placeholder_num = 0;
+		while (findDuplicateCharacterByName(character->getName(),placeholder_num))
+		{
+			++placeholder_num;
+		}
+		string placeholder_name = "_Placeholder_" + std::to_string(placeholder_num);
+		character->setName(placeholder_name);
+		character->setDescription("Placeholder Character: replace with an actual character");
+	}
+	else
+	{
+		characters.remove(character);
+	}
 	//TO DO clear actors_list, if character found in at least one scene: create a placeholder character and cerr: created placeholder character
 }
 
@@ -65,7 +78,14 @@ sp_Character Movie::character(const string & c_name)
 
 void Movie::create(Scene & scene)
 {
-	// TO DO try to find a character with the same name as new one, if found: rename new character and try to find it again
+	unsigned int search_tries = 0;
+	while (findDuplicateSceneByName(scene.getName(), search_tries))
+	{
+		++search_tries;
+	}
+	if (search_tries > 0) // renaming the character if found at least one with the same name
+		scene.setName(scene.getName().append(std::to_string(search_tries)));
+		// TO DO try to find a character with the same name as new one, if found: setName new character and try to find it again
 	scenario.push_back(std::make_shared<Scene>(scene));
 }
 
@@ -113,6 +133,28 @@ bool Movie::findDuplicateCharacterByName(string c_name, unsigned int copy_num)
 		if (selected->getName() == c_name)
 			return true;
 	}
+	return false;
+}
+
+bool Movie::findDuplicateSceneByName(string s_name, unsigned int copy_num)
+{
+	if (copy_num > 0)
+		s_name.append(std::to_string(copy_num));
+
+	for (sp_Scene selected : scenario)
+	{
+		if (selected->getName() == s_name)
+			return true;
+	}
+	return false;
+}
+
+bool Movie::findCharacterInScenario(const string& c_name)
+{
+	for (sp_Scene selected : scenario)
+		for (sp_Character s_character : selected->getSceneCharacters())
+			if (s_character->getName() == c_name)
+				return true;
 	return false;
 }
 
