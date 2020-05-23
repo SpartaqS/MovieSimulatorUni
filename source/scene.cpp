@@ -9,10 +9,8 @@
 Scene::Scene(const string& s_name, const string& s_desc, sp_Director director, sp_CharactersVector& characters) : name(s_name), description(s_desc), scene_characters(characters)
 {
 	if ( charactersInDescription() != scene_characters.size() ) // handling incorrect number of "%s" and characters in pass_characters
-	{
-		std::cerr << "Number of characters in scene.description is different than number of given character pointers. Aborting\n";
-		exit(1);
-	}
+		throw std::exception("Number of characters in scene.description is different than number of given character pointers.");
+
 	directorAdd(director);
 }
 
@@ -39,12 +37,15 @@ Scene::~Scene()
 
 ostream& operator<<(ostream& os, const Scene& sc)
 {
-	string str = sc.description; //copy description
-	for (int i = 0, strIter = str.find("%c"); strIter != string::npos; strIter = str.find("%c"), i++) // replace all "%c" with names of characters 
+	if (sc.scene_directors.size() > 0)
 	{
-		str.replace(strIter, 2, sc.scene_characters[i]->getName() );
+		string str = sc.description; //copy description
+		for (int i = 0, strIter = str.find("%c"); strIter != string::npos; strIter = str.find("%c"), i++) // replace all "%c" with names of characters 
+		{
+			str.replace(strIter, 2, sc.scene_characters[i]->getName());
+		}
+		os << str << "\n";
 	}
-	os << str << " size: " << str.size() << "\n";
 	return os;
 }
 

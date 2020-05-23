@@ -8,14 +8,15 @@ int main()
 {
 	//////* Creating a basic Movie and modifying its title and genre */
 	Movie movie1("The Ordinary Movie", "Romantic Thriller");
-	if (movie1.getTitle != "The Ordinary Movie")
+	if (movie1.getTitle() != "The Ordinary Movie")
 		std::cout << "movie title getter error!\n";
-	if (movie1.getGenre != "Romantic Thriller")
+	if (movie1.getGenre() != "Romantic Thriller")
 		std::cout << "movie genre getter error!\n";
 	movie1.setTitle("Super Original Movie");
-	if (movie1.getTitle != "Super Original Movie")
+	if (movie1.getTitle() != "Super Original Movie")
 		std::cout << "movie title setter error!\n";
-	if (movie1.getGenre != "Fantasy Opera")
+	movie1.setGenre("Fantasy Opera");
+	if (movie1.getGenre() != "Fantasy Opera")
 		std::cout << "movie genre setter error!\n";
 
 	//////* Creating Actors and employing/firing them to work on a movie */
@@ -29,20 +30,19 @@ int main()
 	movie1.employ(actor2);
 	if (movie1.getCast().size() != 2)
 		std::cout << "actor employment error (Movie::actorEmploy())";
-	try {
-		movie1.employ(actor2); // incorrect: employing an actor who already works on movie1
-		std::cout << "missing exception in Movie::actorEmploy()\n";
-	}
-	catch (std::exception& e) {}
+
+	movie1.employ(actor2); // trying to employ an actor who already works on movie1
+	if (movie1.getCast().size() != 2)
+		std::cout << "duplicate actor employment error (Movie::actorEmploy())";
 
 	movie1.fire(actor1); // correct: trying to remove an actor that does works on a movie1
 	if (movie1.getCast().size() != 1)
-		std::cout << "actor fire error (Movie::actorFire())";
-	try {
-		movie1.fire(actor1); // incorrect: trying to remove an actor that does not work on a movie1
-		std::cout << "missing exception in Movie::actorFire()\n";
-	}
-	catch (std::exception& e) {}
+		std::cout << "actor fire error (Movie::actorFire())\n";
+	
+	movie1.fire(actor1); // incorrect: trying to remove an actor that does not work on a movie1
+	if (movie1.getCast().size() != 1)
+		std::cout << "nonexistent actor fire error (Movie::actorFire())";
+
 	movie1.employ(actor1); // add the actor back for further testing
 
 //////* Creating Directors and employing them */
@@ -59,11 +59,17 @@ int main()
 	movie1.character("Bobby")->addActor(actor1); // correct : adding actors to a character (assigning them a role)
 	movie1.character("Bobby")->addActor(actor2);
 	movie1.character("Bobby")->addActor(actor3);
+	try{ 
+		movie1.character("Bobby")->addActor(actor3);
+		std::cout << "missing exception in Character::addActor()\n";
+	}
+	catch(std::exception& e) {}
+
 	if (movie1.character("Bobby")->getActorsCount() != 3)
-		std::cout << "error adding an actor to a character";
+		std::cout << "error adding an actor to a character\n";
 	movie1.character("Bobby")->removeActor(actor1); // correct : removing an actor from a character
-	if (movie1.character("Bobby")->getActorsCount() != 1)
-		std::cout << "error removing an actor from a character";
+	if (movie1.character("Bobby")->getActorsCount() != 2)
+		std::cout << "error removing an actor from a character\n";
 
 	movie1.character("Stephen")->addActor(actor1);
 
@@ -75,31 +81,51 @@ int main()
 
 	sp_CharactersVector SC1Characters = { movie1.character("Stephen"), movie1.character("Bobby") };
 
-	movie1.sceneCreate(Scene("SC1:Park", "%c and %c are entering the park", director1, SC1Characters)); // correct : create a scene
+	movie1.sceneCreate("SC1Park", "%c and %c are entering the park", director1, SC1Characters); // correct : create a scene
+
+	if (movie1.getScenario().size() != 1)
+		std::cout << "Error creating a scene\n";
+	
+	if (movie1.scene("SC1Park")->getName() != "SC1Park")
+		std::cout << "Scene::getName() error\n";
+	if (movie1.scene("SC1Park")->getDescription() != "%c and %c are entering the park")
+		std::cout << "Scene::gerDescription() error\n";
+
+	movie1.scene("SC1Park")->setName("SC1Park1"); // correct : rename a scene
+	
+	try {
+		// incorrect : trying to access a scene which does not exist
+		movie1.scene("SC1Park");
+		std::cout << "missing exception in Movie::scene() when trying to access nonexistent scene\n";
+	}
+	catch (std::exception& e) {}
+	
+	if (movie1.scene("SC1Park1")->getName() != "SC1Park1")
+		std::cout << "Scene::getName() error\n";
+
 	try {
 		// incorrect : too many "%c" character markers in action description (exception is thrown)
-		movie1.scene("SC1Park")->actionCreate("Something's wrong? %c asks %c, and %c responds", SC1Characters);
+		movie1.sceneCreate("SC1Park2","Something's wrong? %c asks %c, and %c responds", director1, SC1Characters);
 	}
 	catch (std::exception& e) {}
 
-	std::cout << movie1.scene("SC1Park")->play() << "\n"; /* playing scene1, scene can be played because there is a director ,output should be:
+	std::cout << "scene1:\n" << *movie1.scene("SC1Park1") << "\n"; /* playing scene1, scene can be played because there is a director ,output should be:
 	Stephen and Bobby are entering the park
 	As the sun rises, Stephen notices that there is something wrong with Bobby
 	*/
 	try {
 		// incorrect : character "Teddy" not in this action (exception is thrown)
-		movie1.scene("SC1Park")->replace(movie1.character("Teddy"), movie1.character("Stephen"));
+		movie1.scene("SC1Park1")->replace(movie1.character("Teddy"), movie1.character("Stephen"));
 	}
 	catch (std::exception& e) {}
-	movie1.scene("SC1Park")->replace(movie1.character("Stephen"), movie1.character("Teddy")); // correct : replacing character "Stephen" with "Teddy"
+	movie1.scene("SC1Park1")->replace(movie1.character("Stephen"), movie1.character("Teddy")); // correct : replacing character "Stephen" with "Teddy"
 
-	std::cout << movie1.scene("SC1Park")->play() << "\n"; /* playing scene1, output should be:
+	std::cout  << *movie1.scene("SC1Park1") << "\n"; /* playing scene1, output should be:
 	Stephen and Bobby are entering the park
-	As the sun rises, Teddy notices that there is something wrong with Bobby
 	*/
 	// creating a more scenes
-	movie1.sceneCreate(Scene("SC2Street", "The traffic lights have turned green\nCars are moving through the street", director1));
-	movie1.sceneCreate(Scene("SC3DeletedScene", " Pointless text ", director1));
+	movie1.sceneCreate("SC2Street", "The traffic lights have turned green\nCars are moving through the street", director1);
+	movie1.sceneCreate("SC3DeletedScene", " Pointless text ", director1);
 	movie1.scene("SC3DeletedScene")->directorRemove(director1); // removing a director (for example is fired), now this scene will not be played until at least one director is assigned
 
 //////* Managing scenes */
@@ -110,7 +136,7 @@ int main()
 	The traffic lights have turned green
 	Cars are moving through the street
 	*/
-	movie1.sceneSwap("SC1Park", "SC2Street"); // correct : swapping positions of two scenes
+	movie1.sceneSwap("SC1Park1", "SC2Street"); // correct : swapping positions of two scenes
 	std::cout << movie1 << "\n"; /* now the output of playing a movie is:
 	The traffic lights have turned green
 	Cars are moving through the street
