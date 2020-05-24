@@ -111,7 +111,6 @@ int main()
 
 	std::cout << "scene1:\n" << *movie1.scene("SC1Park1") << "\n"; /* playing scene1, scene can be played because there is a director ,output should be:
 	Stephen and Bobby are entering the park
-	As the sun rises, Stephen notices that there is something wrong with Bobby
 	*/
 	try {
 		// incorrect : character "Teddy" not in this action (exception is thrown)
@@ -121,32 +120,32 @@ int main()
 	movie1.scene("SC1Park1")->replace(movie1.character("Stephen"), movie1.character("Teddy")); // correct : replacing character "Stephen" with "Teddy"
 
 	std::cout  << *movie1.scene("SC1Park1") << "\n"; /* playing scene1, output should be:
-	Stephen and Bobby are entering the park
+	Teddy and Bobby are entering the park
 	*/
 	// creating a more scenes
 	movie1.sceneCreate("SC2Street", "The traffic lights have turned green\nCars are moving through the street", director1);
 	movie1.sceneCreate("SC3DeletedScene", " Pointless text ", director1);
 	movie1.scene("SC3DeletedScene")->directorRemove(director1); // removing a director (for example is fired), now this scene will not be played until at least one director is assigned
 
+	std::cout << "x" << *movie1.scene("SC3DeletedScene") << "x\n"; // correct: the scene will not be printed as there are no directors (the stream is unchanged)
+
 //////* Managing scenes */
 
-	std::cout << movie1 << "\n"; /* plays the whole movie, as of now there are only 2 scenes so the output is:
-	Stephen and Bobby are entering the park
-	As the sun rises, Teddy notices that there is something wrong with Bobby
+	movie1.play(std::cout) << "\n"; /* plays the whole movie, as of now there are only 2 scenes so the output is:
+	Teddy and Bobby are entering the park
 	The traffic lights have turned green
 	Cars are moving through the street
 	*/
 	movie1.sceneSwap("SC1Park1", "SC2Street"); // correct : swapping positions of two scenes
-	std::cout << movie1 << "\n"; /* now the output of playing a movie is:
+	movie1.play(std::cout) << "\n"; /* now the output of playing a movie is:
 	The traffic lights have turned green
 	Cars are moving through the street
-	Stephen and Bobby are entering the park
-	As the sun rises, Teddy notices that there is something wrong with Bobby
+	Teddy and Bobby are entering the park
 	*/
 	movie1.sceneDelete("SC3DeletedScene"); // correct : deleting a scene
 
 //////* Actors resigning and credits */
-	std::cout << movie1.credits() << "\n"; /*plays credits
+	movie1.credits(std::cout); /*plays credits
 	  Directed by:
 	Zedaph Zebra
 
@@ -156,7 +155,7 @@ int main()
 	Teddy - *Computer Generated*
 	*/
 	actor3->quitMovie("Super Original Movie"); // correct : Carol Ceasfire resigns from working on a movie
-	std::cout << movie1.credits() << "\n"; /* now credits do not show Carol Ceasfire...
+	movie1.credits(std::cout) << "\n"; /* now credits do not show Carol Ceasfire...
 	  Directed by:
 	Zedaph Zebra
 

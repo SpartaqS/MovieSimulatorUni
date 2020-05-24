@@ -24,7 +24,7 @@ public:
 	/* Character Management */
 	void characterCreate(const string &c_name, const string &c_descr);// overloaded method "sceneCreate" for adding new Character
 	//sceneCreate a new character, if there exists a character with name == c_name : force setName the new character
-	void remove(sp_Character character); // delete a character, if there is no character with name == c_name : throw exception
+	void remove(sp_Character character); // delete a character, if they are present in at least one scene, create a placeholder character to keep all scenes in tact
 	sp_Character character(const string& c_name); // get shared pointer to a Character, if there is no character with name == c_name : throw exception
 	/* Scene Management */ // <-- those could be overloaded to use scene numbers too but not sure if that's needed 
 	void sceneCreate(const string& s_name, const string& s_desc, sp_Director director, sp_CharactersVector& s_characters);  // sceneCreate a new scene at the end of the scenario, if there exists a scene with the same name: force rename the new scene
@@ -35,8 +35,8 @@ public:
 	//maybye add scene swap by numbers
 	sp_Scene scene(const string& s_name); //get shared pointer to a Scene, if there is no scene with name == s_name : throw exception
 	
-	string credits(); // play just credits, format: (character1 - actor1, actor2 ...)
-	friend ostream& operator<<(ostream& os, const Movie& m); //play the whole movie (return as stream)
+	ostream& credits(ostream& os); // play just credits, format: (character1 - actor1, actor2 ...)
+	ostream& play(ostream& os); //play the whole movie (return as stream)
 
 	string getTitle() const { return title; }; // title getter
 	void setTitle(const string& m_new_title); // title setter

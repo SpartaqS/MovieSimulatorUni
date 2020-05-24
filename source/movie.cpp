@@ -2,7 +2,9 @@
 
 Movie::Movie(const string & m_title, const string & m_genre) : title(m_title), genre(m_genre) {}
 
-Movie::Movie(const Movie & movie) : title(movie.title) , genre(movie.genre) {}
+Movie::Movie(const Movie & movie) : title(movie.title) , genre(movie.genre) 
+{//copy all contents
+}
 
 Movie & Movie::operator=(const Movie & movie)
 {
@@ -12,7 +14,10 @@ Movie & Movie::operator=(const Movie & movie)
 
 Movie::~Movie()
 {
-	// do firing all of team
+	scenario.clear();
+	characters.clear();
+	//for (sp_Person selected : team)// do firing all of team members
+		//fire(selected);
 }
 
 void Movie::employ(sp_Person person)
@@ -22,12 +27,23 @@ void Movie::employ(sp_Person person)
 
 void Movie::fire(sp_Person person)
 {
-	// TO DO cycle through all scenes to remove "person"
+	// TO DO if actor: cycle through all characters to remove "person"
+	// if director: cycle through all scenes to remove "person"
 	team.erase(person);
 }
 
 void Movie::actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2)
 {
+	for (sp_Character sel_character : characters)
+	{
+		for (sp_Actor sel_actor : sel_character->getActorsList() )// swap actor1 into actor2  XOR actor2 into actor1
+		{
+			if (sel_actor == actor1)
+				sel_actor = actor2;
+			else if (sel_actor == actor2)
+				sel_actor = actor1;
+		}
+	}
 	// TO DO swap all occurences of actor1 and actor2 in characters (list) actor1->temp, actor2->actor1, temp->actor2
 }
 
@@ -46,7 +62,7 @@ void Movie::characterCreate(const string &c_name, const string &c_descr)
 
 void Movie::remove(sp_Character character)
 {
-	if (isCharacterInScenario(character->getName()))
+	if (isCharacterInScenario(character->getName())) //check if the character appears in at least one scene
 	{
 		unsigned int placeholder_num = 0;
 		while (isDuplicateCharacterByName(character->getName(),placeholder_num))
@@ -61,7 +77,6 @@ void Movie::remove(sp_Character character)
 	{
 		characters.remove(character);
 	}
-	//TO DO clear actors_list, if character found in at least one scene: sceneCreate a placeholder character and cerr: created placeholder character
 }
 
 sp_Character Movie::character(const string & c_name)
@@ -128,10 +143,11 @@ sp_Scene Movie::scene(const string & s_name)
 	throw std::exception("Exception: Movie::scene(s_name) : no scene with specified name in the list of scenes (scenario)");
 }
 
-string Movie::credits()
+ostream& Movie::credits(ostream& os)
 {
 	// TO DO: Print credits directors,characters:actors (1. at all 2. alphabetically)
-	return string();
+	os << "Credits:\n";
+	return os;
 }
 
 void Movie::setTitle(const string & m_new_title)
@@ -179,8 +195,11 @@ bool Movie::isCharacterInScenario(const string& c_name)
 	return false;
 }
 
-ostream & operator<<(ostream & os, const Movie & m)
+ostream& Movie::play(ostream & os)
 {
-	// TODO: tu wstawiæ instrukcjê return
+	for (sp_Scene selected : scenario)
+	{
+		os << *selected;
+	}
 	return os;
 }
