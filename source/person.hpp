@@ -17,6 +17,7 @@ using sp_Movie = std::shared_ptr<Movie>;
 using sp_MovieList = std::list<sp_Movie>;
 
 using string = std::string;
+enum personType { base, director, actor};
 
 class Person
 {

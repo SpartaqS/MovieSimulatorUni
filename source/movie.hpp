@@ -31,10 +31,11 @@ public:
 	void sceneCreate(const string& s_name, const string& s_desc, sp_Director director);  // sceneCreate a new scene at the end of the scenario, if there exists a scene with the same name: force rename the new scene
 	void sceneDelete(const string& s_name); // delete a scene from the scenario, if there is no scene with name == s_name : throw exception
 	void sceneDelete(const unsigned int& number ); //delete number-th scene from the scenario, if out of range : throw exception
-	void sceneSwap(const string& s1_name, const string& s2_name); // swap order of scenes s1 and s2, if at least one s_name is invalid : throw exception
+	void sceneSwap(sp_Scene s1, sp_Scene s2); // swap order of scenes s1 and s2, their validity is checked by selecting them using Movie::scene()
 	//maybye add scene swap by numbers
 	sp_Scene scene(const string& s_name); //get shared pointer to a Scene, if there is no scene with name == s_name : throw exception
-	
+	sp_Scene scene(const unsigned int s_number); //get shared pointer to a Scene, if s_number out of range : throw exception
+
 	ostream& credits(ostream& os); // play just credits, format: (character1 - actor1, actor2 ...)
 	ostream& play(ostream& os); //play the whole movie (return as stream)
 
@@ -54,6 +55,7 @@ private:
 	bool isDuplicateCharacterByName(string c_name, unsigned int copy_num);
 	bool isDuplicateSceneByName(string s_name, unsigned int copy_num);
 	bool isCharacterInScenario(const string& c_name);
+	personType recognizePersonRole(sp_Person person); //check if this person is an actor, director or just base person
 };
 
 

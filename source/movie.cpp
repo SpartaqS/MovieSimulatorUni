@@ -44,7 +44,6 @@ void Movie::actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2)
 				sel_actor = actor1;
 		}
 	}
-	// TO DO swap all occurences of actor1 and actor2 in characters (list) actor1->temp, actor2->actor1, temp->actor2
 }
 
 void Movie::characterCreate(const string &c_name, const string &c_descr)
@@ -125,9 +124,10 @@ void Movie::sceneDelete(const string & s_name)
 void Movie::sceneDelete(const unsigned int & number)
 {
 }
-
-void Movie::sceneSwap(const string & s1_name, const string & s2_name)
-{
+#include <iostream>
+void Movie::sceneSwap(sp_Scene s1, sp_Scene s2)
+{// no need to check their validity as you should access the scenes using Movie:scene(s_name)/(s_number)
+	std::swap(*s1, *s2);
 }
 
 sp_Scene Movie::scene(const string & s_name)
@@ -143,11 +143,58 @@ sp_Scene Movie::scene(const string & s_name)
 	throw std::exception("Exception: Movie::scene(s_name) : no scene with specified name in the list of scenes (scenario)");
 }
 
-ostream& Movie::credits(ostream& os)
+sp_Scene Movie::scene(const unsigned int s_number)
 {
-	// TO DO: Print credits directors,characters:actors (1. at all 2. alphabetically)
-	os << "Credits:\n";
-	return os;
+	if (s_number > scenario.size()) //if out of range then throw exception
+		throw std::exception("Exception: Movie::scene(s_number) : provided s_number is out of range (there are less scenes than that)");
+	else
+	{
+		unsigned int sel_num = 0;
+		for (sp_Scene sel_scene : scenario)
+		{
+			if (sel_num == s_number) // found scene -> return it
+				return sel_scene;
+			++sel_num;
+		}
+	}
+}
+
+ostream& Movie::credits(ostream& os) // !!!!!!!!!!!!!!!!!!!
+{
+	os << "  Directed by:\n"; // printing all directors
+	for (sp_Person sel_person : team)
+	{
+		if (recognizePersonRole(sel_person) == director)
+			os << sel_person->getName() <<"\n";
+	}
+	os << "\n  Roles:\n";
+	for (sp_Character sel_character : characters) // printing out all characters with actors playing them
+	{
+		os << sel_character->getName() << " - ";
+		if (sel_character->getActorsList().size() == 0)
+		{
+			os << "*Computer Generated*";
+		} // PRINTING ACTORS
+		else 
+		{
+			unsigned int actor_num = 1;
+			for (sp_Actor sel_actor : sel_character->getActorsList())
+			{
+				if (actor_num == 2) // start listing the one stunt
+					if(sel_character->getActorsList().size() == 2)
+						os << "stunt: ";
+					else // start listing all stunts
+						os << "stunts: ";
+				os << sel_actor->getName();
+				if (actor_num < sel_character->getActorsList().size())
+					os << ", ";
+				++actor_num;
+			}
+		}
+		os << "\n";
+	}
+	// TO DO: Print credits directors,characters:actors (1. at all 2. alphabetically) */
+	return os; 
 }
 
 void Movie::setTitle(const string & m_new_title)
@@ -193,6 +240,17 @@ bool Movie::isCharacterInScenario(const string& c_name)
 			if (s_character->getName() == c_name)
 				return true;
 	return false;
+}
+
+personType Movie::recognizePersonRole(sp_Person person)
+{
+	sp_Actor testActor;
+	sp_Director testDirector;
+	if ((testActor = std::dynamic_pointer_cast<Actor>(person)) != nullptr)
+		return actor;
+	else if ((testDirector = std::dynamic_pointer_cast<Director>(person)) != nullptr)
+		return director;
+	return base;
 }
 
 ostream& Movie::play(ostream & os)

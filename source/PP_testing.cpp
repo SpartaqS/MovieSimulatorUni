@@ -2,6 +2,7 @@
 	Gabriel Skowron-Rodriguez */
 
 #include <iostream>
+#include <sstream> // to test returned "ostream"s
 #include "movie.hpp"
 
 int main()
@@ -73,11 +74,14 @@ int main()
 
 	movie1.character("Stephen")->addActor(actor1);
 
-
 	movie1.actorRoleSwap(actor1, actor3); // correct: all roles of actor1 and actor2 are swapped
 	movie1.character("Stephen")->replaceActor(actor3, actor1); // correct: replaces actor3 with actor1 as character "Stephen"
 
+	movie1.character("Bobby")->addActor(actor1);
+	movie1.character("Stephen")->addActor(actor3);
+
 //////* Creating and modifying Scenes */
+	std::stringstream os; // stringstream used for testing of scenes
 
 	sp_CharactersVector SC1Characters = { movie1.character("Stephen"), movie1.character("Bobby") };
 
@@ -96,7 +100,7 @@ int main()
 	try {
 		// incorrect : trying to access a scene which does not exist
 		movie1.scene("SC1Park");
-		std::cout << "missing exception in Movie::scene() when trying to access nonexistent scene\n";
+		std::cout << "missing exception in Movie::scene() when trying to access nonexistent scene";
 	}
 	catch (std::exception& e) {}
 	
@@ -109,53 +113,85 @@ int main()
 	}
 	catch (std::exception& e) {}
 
-	std::cout << "scene1:\n" << *movie1.scene("SC1Park1") << "\n"; /* playing scene1, scene can be played because there is a director ,output should be:
+	os << *movie1.scene("SC1Park1"); /* playing scene1, scene can be played because there is a director ,output should be:
 	Stephen and Bobby are entering the park
 	*/
+	if (os.str() != "Stephen and Bobby are entering the park\n")
+		std::cout << "Error: operator<< for Scene\n";
+	
 	try {
 		// incorrect : character "Teddy" not in this action (exception is thrown)
 		movie1.scene("SC1Park1")->replace(movie1.character("Teddy"), movie1.character("Stephen"));
 	}
 	catch (std::exception& e) {}
 	movie1.scene("SC1Park1")->replace(movie1.character("Stephen"), movie1.character("Teddy")); // correct : replacing character "Stephen" with "Teddy"
-
-	std::cout  << *movie1.scene("SC1Park1") << "\n"; /* playing scene1, output should be:
+	os.str(""); // emptying the stream
+	os  << *movie1.scene("SC1Park1"); /* playing scene1, output should be:
 	Teddy and Bobby are entering the park
 	*/
+	if (os.str() != "Teddy and Bobby are entering the park\n")
+		std::cout << "Error: Scene::replace(sp_Character,sp_Character)\n";
+
 	// creating a more scenes
 	movie1.sceneCreate("SC2Street", "The traffic lights have turned green\nCars are moving through the street", director1);
-	movie1.sceneCreate("SC3DeletedScene", " Pointless text ", director1);
-	movie1.scene("SC3DeletedScene")->directorRemove(director1); // removing a director (for example is fired), now this scene will not be played until at least one director is assigned
+	if (movie1.getScenario().size() != 2)
+		std::cout << "Error creating multiple scenes (should be 2 scenes now)\n";
 
-	std::cout << "x" << *movie1.scene("SC3DeletedScene") << "x\n"; // correct: the scene will not be printed as there are no directors (the stream is unchanged)
+	movie1.sceneCreate("SC3DeletedScene", " Pointless text ", director1);
+	if (movie1.getScenario().size() != 3)
+		std::cout << "Error creating multiple scenes (should be 3 scenes now)\n";
+
+	movie1.scene("SC3DeletedScene")->directorRemove(director1); // removing a director (for example is fired), now this scene will not be played until at least one director is assigned
+	if (movie1.getScenario().size() != 3) // removing a director should not remove a scene completely
+		std::cout << "Error creating multiple scenes (removing a director should not remove a scene)\n";
+
+	os.str(""); // emptying the stream
+	os << *movie1.scene("SC3DeletedScene");// correct: the scene will not be printed as there are no directors (the stream is unchanged)
+	if (os.str() != "")
+		std::cout << "Error: Scene played without a director\n";
 
 //////* Managing scenes */
+	os.str(""); // emptying the stream
+	movie1.play(os); /* plays the whole movie to a stream "os", as of now there are only 2 scenes so the output is:
+	Teddy and Bobby are entering the park
+	The traffic lights have turned green
+	Cars are moving through the street
+	*/
+	if (os.str() != "Teddy and Bobby are entering the park\nThe traffic lights have turned green\nCars are moving through the street\n")
+		std::cout << "Error: movie1.play(ostream& os)\n";
+	//std::cout << os.str();
 
-	movie1.play(std::cout) << "\n"; /* plays the whole movie, as of now there are only 2 scenes so the output is:
-	Teddy and Bobby are entering the park
-	The traffic lights have turned green
-	Cars are moving through the street
-	*/
-	movie1.sceneSwap("SC1Park1", "SC2Street"); // correct : swapping positions of two scenes
-	movie1.play(std::cout) << "\n"; /* now the output of playing a movie is:
+	os.str(""); // emptying the stream
+	movie1.sceneSwap(movie1.scene("SC1Park1"),movie1.scene("SC2Street")); // correct : swapping positions of two scenes
+	movie1.play(os);/* now the output of playing a movie is:
 	The traffic lights have turned green
 	Cars are moving through the street
 	Teddy and Bobby are entering the park
 	*/
+	if (os.str() != "The traffic lights have turned green\nCars are moving through the street\nTeddy and Bobby are entering the park\n")
+		std::cout << "Error: movie1.sceneSwap()\n";
+	//std::cout << os.str();
+
 	movie1.sceneDelete("SC3DeletedScene"); // correct : deleting a scene
 
 //////* Actors resigning and credits */
-	movie1.credits(std::cout); /*plays credits
+	os.str(""); // emptying the stream
+	movie1.credits(os); /*plays credits
 	  Directed by:
 	Zedaph Zebra
 
 	  Roles:
-	Bobby - Bernard Baker, stunt: Carol Ceasfire
-	Stephen - Adam Actual
+	Bobby - Bernard Baker, stunts: Carol Ceasfire, Adam Actual
+	Stephen - Adam Actual, stunt: Carol Ceasfire
 	Teddy - *Computer Generated*
 	*/
+	string credits_test1 = "  Directed by:\nZedaph Zebra\n\n  Roles:\nBobby - Bernard Baker, stunts: Carol Ceasfire, Adam Actual\nStephen - Adam Actual, stunt: Carol Ceasfire\nTeddy - *Computer Generated*\n";
+	if (os.str() != credits_test1)
+		std::cout << "Error: movie1.credits()\n";
+	
 	actor3->quitMovie("Super Original Movie"); // correct : Carol Ceasfire resigns from working on a movie
-	movie1.credits(std::cout) << "\n"; /* now credits do not show Carol Ceasfire...
+	os.str("");
+	movie1.credits(os); /* now credits do not show Carol Ceasfire...
 	  Directed by:
 	Zedaph Zebra
 
