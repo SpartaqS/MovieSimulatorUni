@@ -172,7 +172,10 @@ int main()
 		std::cout << "Error: movie1.sceneSwap()\n";
 	//std::cout << os.str();
 
-	movie1.sceneDelete("SC3DeletedScene"); // correct : deleting a scene
+	movie1.sceneDelete(movie1.scene("SC3DeletedScene")); // correct : deleting a scene
+	if (movie1.getScenario().size() != 2) // removing a director should not remove a scene completely
+		std::cout << "Error: movie1.sceneDelete() has failed\n";
+
 
 //////* Actors resigning and credits */
 	os.str(""); // emptying the stream

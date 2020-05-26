@@ -117,14 +117,12 @@ void Movie::sceneCreate(const string & s_name, const string & s_desc, sp_Directo
 	scenario.push_back(std::make_shared<Scene>(scene));
 }
 
-void Movie::sceneDelete(const string & s_name)
+void Movie::sceneDelete(sp_Scene scene)
 {
+	scenario.remove(scene); // destructor handles pointers
 }
 
-void Movie::sceneDelete(const unsigned int & number)
-{
-}
-#include <iostream>
+#include <iostream> //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void Movie::sceneSwap(sp_Scene s1, sp_Scene s2)
 {// no need to check their validity as you should access the scenes using Movie:scene(s_name)/(s_number)
 	std::swap(*s1, *s2);
@@ -174,7 +172,7 @@ ostream& Movie::credits(ostream& os) // !!!!!!!!!!!!!!!!!!!
 		if (sel_character->getActorsList().size() == 0)
 		{
 			os << "*Computer Generated*";
-		} // PRINTING ACTORS
+		} // printing actors
 		else 
 		{
 			unsigned int actor_num = 1;
@@ -193,7 +191,6 @@ ostream& Movie::credits(ostream& os) // !!!!!!!!!!!!!!!!!!!
 		}
 		os << "\n";
 	}
-	// TO DO: Print credits directors,characters:actors (1. at all 2. alphabetically) */
 	return os; 
 }
 

@@ -29,8 +29,7 @@ public:
 	/* Scene Management */ // <-- those could be overloaded to use scene numbers too but not sure if that's needed 
 	void sceneCreate(const string& s_name, const string& s_desc, sp_Director director, sp_CharactersVector& s_characters);  // sceneCreate a new scene at the end of the scenario, if there exists a scene with the same name: force rename the new scene
 	void sceneCreate(const string& s_name, const string& s_desc, sp_Director director);  // sceneCreate a new scene at the end of the scenario, if there exists a scene with the same name: force rename the new scene
-	void sceneDelete(const string& s_name); // delete a scene from the scenario, if there is no scene with name == s_name : throw exception
-	void sceneDelete(const unsigned int& number ); //delete number-th scene from the scenario, if out of range : throw exception
+	void sceneDelete(sp_Scene scene); // delete a scene from the scenario, Movie::scene() ensures the correctness of provided sp_Scene 
 	void sceneSwap(sp_Scene s1, sp_Scene s2); // swap order of scenes s1 and s2, their validity is checked by selecting them using Movie::scene()
 	//maybye add scene swap by numbers
 	sp_Scene scene(const string& s_name); //get shared pointer to a Scene, if there is no scene with name == s_name : throw exception

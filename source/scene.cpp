@@ -10,7 +10,6 @@ Scene::Scene(const string& s_name, const string& s_desc, sp_Director director, s
 {
 	if ( charactersInDescription() != scene_characters.size() ) // handling incorrect number of "%s" and characters in pass_characters
 		throw std::exception("Number of characters in scene.description is different than number of given character pointers.");
-
 	directorAdd(director);
 }
 
@@ -31,8 +30,9 @@ Scene& Scene::operator=(const Scene& scene)
 }
 
 Scene::~Scene()
-{
-	// I guess empty as there are smart pointers who will just die?
+{// making sure that all shared pointers get deleted
+	scene_characters.clear();
+	scene_directors.clear();
 }
 
 ostream& operator<<(ostream& os, const Scene& sc)
