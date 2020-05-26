@@ -29,6 +29,7 @@ int main()
 
 	movie1.employ(actor1); // correct: employing actors to movie1
 	movie1.employ(actor2);
+	std::cout << actor1->getPortfolio().size();
 	if (movie1.getCast().size() != 2)
 		std::cout << "actor employment error (Movie::actorEmploy())";
 
@@ -54,31 +55,37 @@ int main()
 	//////* Creating Characters and assigning Actors to them */
 
 	movie1.characterCreate("Bobby", "A blonde, well built man always dressed in a red shirt and green trousers");
+	if (movie1.getCharacters().size() != 1)
+		std::cout << "error adding a a character\n";
 	movie1.characterCreate("Stephen", "Auburn haired, fit man. Likes to wear a blue jacket and purple pants");
+	if (movie1.getCharacters().size() != 2)
+		std::cout << "error adding a a character\n";
 	movie1.characterCreate("Teddy", "Auburn haired, fit man. Stephen's younger twin. Likes to wear a purple jacket and blue pants");
+	if (movie1.getCharacters().size() != 3)
+		std::cout << "error adding a a character\n";
 
-	movie1.character("Bobby")->addActor(actor1); // correct : adding actors to a character (assigning them a role)
-	movie1.character("Bobby")->addActor(actor2);
-	movie1.character("Bobby")->addActor(actor3);
+	movie1.character("Bobby")->actorAdd(actor1); // correct : adding actors to a character (assigning them a role)
+	movie1.character("Bobby")->actorAdd(actor2);
+	movie1.character("Bobby")->actorAdd(actor3);
 	try{ 
-		movie1.character("Bobby")->addActor(actor3);
+		movie1.character("Bobby")->actorAdd(actor3);
 		std::cout << "missing exception in Character::addActor()\n";
 	}
-	catch(std::exception& e) {}
+	catch(std::exception&) {}
 
 	if (movie1.character("Bobby")->getActorsCount() != 3)
 		std::cout << "error adding an actor to a character\n";
-	movie1.character("Bobby")->removeActor(actor1); // correct : removing an actor from a character
+	movie1.character("Bobby")->actorRemove(actor1); // correct : removing an actor from a character
 	if (movie1.character("Bobby")->getActorsCount() != 2)
 		std::cout << "error removing an actor from a character\n";
 
-	movie1.character("Stephen")->addActor(actor1);
+	movie1.character("Stephen")->actorAdd(actor1);
 
 	movie1.actorRoleSwap(actor1, actor3); // correct: all roles of actor1 and actor2 are swapped
-	movie1.character("Stephen")->replaceActor(actor3, actor1); // correct: replaces actor3 with actor1 as character "Stephen"
+	movie1.character("Stephen")->actorReplace(actor3, actor1); // correct: replaces actor3 with actor1 as character "Stephen"
 
-	movie1.character("Bobby")->addActor(actor1);
-	movie1.character("Stephen")->addActor(actor3);
+	movie1.character("Bobby")->actorAdd(actor1);
+	movie1.character("Stephen")->actorAdd(actor3);
 
 //////* Creating and modifying Scenes */
 	std::stringstream os; // stringstream used for testing of scenes
@@ -102,7 +109,7 @@ int main()
 		movie1.scene("SC1Park");
 		std::cout << "missing exception in Movie::scene() when trying to access nonexistent scene";
 	}
-	catch (std::exception& e) {}
+	catch (std::exception&) {}
 	
 	if (movie1.scene("SC1Park1")->getName() != "SC1Park1")
 		std::cout << "Scene::getName() error\n";
@@ -111,7 +118,7 @@ int main()
 		// incorrect : too many "%c" character markers in action description (exception is thrown)
 		movie1.sceneCreate("SC1Park2","Something's wrong? %c asks %c, and %c responds", director1, SC1Characters);
 	}
-	catch (std::exception& e) {}
+	catch (std::exception&) {}
 
 	os << *movie1.scene("SC1Park1"); /* playing scene1, scene can be played because there is a director ,output should be:
 	Stephen and Bobby are entering the park
@@ -123,7 +130,7 @@ int main()
 		// incorrect : character "Teddy" not in this action (exception is thrown)
 		movie1.scene("SC1Park1")->replace(movie1.character("Teddy"), movie1.character("Stephen"));
 	}
-	catch (std::exception& e) {}
+	catch (std::exception&) {}
 	movie1.scene("SC1Park1")->replace(movie1.character("Stephen"), movie1.character("Teddy")); // correct : replacing character "Stephen" with "Teddy"
 	os.str(""); // emptying the stream
 	os  << *movie1.scene("SC1Park1"); /* playing scene1, output should be:
@@ -190,8 +197,9 @@ int main()
 	*/
 	string credits_test1 = "  Directed by:\nZedaph Zebra\n\n  Roles:\nBobby - Bernard Baker, stunts: Carol Ceasfire, Adam Actual\nStephen - Adam Actual, stunt: Carol Ceasfire\nTeddy - *Computer Generated*\n";
 	if (os.str() != credits_test1)
-		std::cout << "Error: movie1.credits()\n";
+		std::cout << "Error: movie1.credits() 1\n";
 	
+	//movie1.fire(actor3);
 	actor3->quitMovie("Super Original Movie"); // correct : Carol Ceasfire resigns from working on a movie
 	os.str("");
 	movie1.credits(os); /* now credits do not show Carol Ceasfire...
@@ -199,10 +207,14 @@ int main()
 	Zedaph Zebra
 
 	  Roles:
-	Bobby - Bernard Baker
+	Bobby - Bernard Baker, stunt: Adam Actual
 	Stephen - Adam Actual
 	Teddy - *Computer Generated*
 	*/
+	string credits_test2 = "  Directed by:\nZedaph Zebra\n\n  Roles:\nBobby - Bernard Baker, stunt: Adam Actual\nStephen - Adam Actual\nTeddy - *Computer Generated*\n";
+	if (os.str() != credits_test2)
+		std::cout << "Error: movie1.credits() 2: This one does not work because I do not know how Movie can pass a \"shared_ptr to itself\" as a parameter for Person::movieAdd(sp_Movie)\n";
+	std::cout << os.str() << "should be:\n" << credits_test2;
 	std::cout << "Showcase tests ended\n";
 	return 0;
 }

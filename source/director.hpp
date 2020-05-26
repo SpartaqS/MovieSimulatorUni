@@ -11,7 +11,7 @@ class Director : public Person
 {
 public:
 	Director(const string &given_name); // constructor
-	Director(const Director& director); // copy constructor
+	//Director(const Director& director); // copy constructor
 	//Director& operator=(const Director& director); //assignment operator
 	//virtual ~Director(); // destructor -> calls all portfolio movies to act accordingly
 };

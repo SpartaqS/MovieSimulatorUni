@@ -18,7 +18,7 @@ Scene::Scene(const string& s_name, const string& s_desc, sp_Director director) :
 	directorAdd(director);
 }
 
-Scene::Scene(const Scene& scene) : name(scene.name), description(scene.description), scene_characters(scene.scene_characters), scene_directors(scene.scene_directors) {}
+/*Scene::Scene(const Scene& scene) : name(scene.name), description(scene.description), scene_characters(scene.scene_characters), scene_directors(scene.scene_directors) {}
 
 Scene& Scene::operator=(const Scene& scene)
 {
@@ -27,12 +27,11 @@ Scene& Scene::operator=(const Scene& scene)
 	scene_characters = scene.scene_characters;
 	scene_directors = scene.scene_directors;
 	return *this;
-}
+}*/
 
 Scene::~Scene()
-{// making sure that all shared pointers get deleted
-	scene_characters.clear();
-	scene_directors.clear();
+{
+	// I guess this is empty because smart pointers can manage themselves
 }
 
 ostream& operator<<(ostream& os, const Scene& sc)
@@ -72,9 +71,9 @@ void Scene::directorAdd(sp_Director director)
 	scene_directors.push_back(director);
 }
 
-void Scene::directorRemove(sp_Director director)
+void Scene::directorRemove(sp_Director s_director)
 {
-	scene_directors.remove(director);
+	scene_directors.remove(s_director);
 }
 
 size_t Scene::charactersInDescription()

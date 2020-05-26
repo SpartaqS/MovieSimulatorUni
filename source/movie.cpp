@@ -1,35 +1,51 @@
 #include "movie.hpp"
 
+#include <iostream> //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Movie::Movie(const string & m_title, const string & m_genre) : title(m_title), genre(m_genre) {}
 
-Movie::Movie(const Movie & movie) : title(movie.title) , genre(movie.genre) 
-{//copy all contents
+/*Movie::Movie(const Movie & movie) : title(movie.title) , genre(movie.genre) 
+{
 }
 
 Movie & Movie::operator=(const Movie & movie)
 {
-	// TODO: tu wstawiæ instrukcjê return
 	return *this;
-}
+}*/
 
 Movie::~Movie()
 {
-	scenario.clear();
-	characters.clear();
-	//for (sp_Person selected : team)// do firing all of team members
-		//fire(selected);
+	// I guess this is empty because smart pointers can manage themselves
 }
 
 void Movie::employ(sp_Person person)
 {
 	team.insert(person);
+	sp_Movie thisMovie = std::make_shared<Movie>(*this);
+	person->movieAdd(thisMovie);
 }
 
 void Movie::fire(sp_Person person)
 {
-	// TO DO if actor: cycle through all characters to remove "person"
-	// if director: cycle through all scenes to remove "person"
-	team.erase(person);
+	// if actor: cycle through all characters to remove pointers to "person" from them
+	if (isInTeam(person)) //if not: do nothing
+	{
+		if (recognizePersonRole(person) == pt_actor)
+		{
+			for (sp_Character sel_character : characters)
+			{
+				std::cout << "removing from character\n";
+				sel_character->actorRemove(std::dynamic_pointer_cast<Actor>(person));
+			}
+		}
+		// if director: cycle through all scenes to remove pointers to "person" from them
+		else if (recognizePersonRole(person) == pt_director)
+		{
+			for (sp_Scene sel_scene : scenario)
+				sel_scene->directorRemove(std::dynamic_pointer_cast<Director>(person));
+		}
+		person->movieRemove(title); // asking "person" to remove this movie from their portfolio
+		team.erase(person);
+	}
 }
 
 void Movie::actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2)
@@ -57,6 +73,7 @@ void Movie::characterCreate(const string &c_name, const string &c_descr)
 	if (search_tries > 0) // renaming the character if found at least one with the same name
 		character.setName(character.getName().append(std::to_string(search_tries)));
 	characters.push_back(std::make_shared<Character>(character));
+	int x;
 }
 
 void Movie::remove(sp_Character character)
@@ -122,7 +139,6 @@ void Movie::sceneDelete(sp_Scene scene)
 	scenario.remove(scene); // destructor handles pointers
 }
 
-#include <iostream> //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 void Movie::sceneSwap(sp_Scene s1, sp_Scene s2)
 {// no need to check their validity as you should access the scenes using Movie:scene(s_name)/(s_number)
 	std::swap(*s1, *s2);
@@ -162,7 +178,7 @@ ostream& Movie::credits(ostream& os) // !!!!!!!!!!!!!!!!!!!
 	os << "  Directed by:\n"; // printing all directors
 	for (sp_Person sel_person : team)
 	{
-		if (recognizePersonRole(sel_person) == director)
+		if (recognizePersonRole(sel_person) == pt_director)
 			os << sel_person->getName() <<"\n";
 	}
 	os << "\n  Roles:\n";
@@ -239,15 +255,23 @@ bool Movie::isCharacterInScenario(const string& c_name)
 	return false;
 }
 
+bool Movie::isInTeam(sp_Person person)
+{
+	for (sp_Person sel_person : team)
+		if (sel_person == person)
+			return true;
+	return false;
+}
+
 personType Movie::recognizePersonRole(sp_Person person)
 {
 	sp_Actor testActor;
 	sp_Director testDirector;
 	if ((testActor = std::dynamic_pointer_cast<Actor>(person)) != nullptr)
-		return actor;
+		return pt_actor;
 	else if ((testDirector = std::dynamic_pointer_cast<Director>(person)) != nullptr)
-		return director;
-	return base;
+		return pt_director;
+	return pt_base;
 }
 
 ostream& Movie::play(ostream & os)

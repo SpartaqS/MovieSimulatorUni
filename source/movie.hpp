@@ -9,15 +9,15 @@
 #include <exception>
 #include "scene.hpp"
 
-class Movie
+class Movie : std::enable_shared_from_this<Movie>
 {
 public:
 	Movie(const string& m_title, const string& m_genre); //constructor
-	Movie(const Movie& movie); // copy constructor
-	Movie& operator= (const Movie& movie); // assignment operator
+	//Movie(const Movie& movie); // copy constructor
+	//Movie& operator= (const Movie& movie); // assignment operator
 	~Movie(); //destructor
 	/* Actor/Director adding/removing */
-	void employ(sp_Person person); // THIS!!!!!  // add an person to team (actors: allow them to play characters, directors : allow them directing scenes), if person already in team : throw exception
+	void employ(sp_Person person); // add an person to team (actors: allow them to play characters, directors : allow them directing scenes), if person already in team : throw exception
 	void fire(sp_Person person); // remove the person from the team, call critical methods to handle this situation, if person nonexistent in team : throw exception
 	/* Actor Management */
 	void actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2); // swap all occurences of actor1 and actor2 in characters (list)
@@ -54,7 +54,8 @@ private:
 	bool isDuplicateCharacterByName(string c_name, unsigned int copy_num);
 	bool isDuplicateSceneByName(string s_name, unsigned int copy_num);
 	bool isCharacterInScenario(const string& c_name);
-	personType recognizePersonRole(sp_Person person); //check if this person is an actor, director or just base person
+	bool isInTeam(sp_Person person);
+	personType recognizePersonRole(sp_Person person); //check if this person is an Actor, Director or just base Person
 };
 
 

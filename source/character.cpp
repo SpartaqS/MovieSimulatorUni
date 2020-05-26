@@ -2,17 +2,20 @@
 
 Character::Character(const string & c_name, const string & c_descr) : name(c_name) , description(c_descr) {}
 
-Character::Character(const Character & character) : name(character.name) , description(character.description) {}
+/*Character::Character(const Character & character) : name(character.name) , description(character.description)
+{
+	actors = character.actors;
+}
 
 Character & Character::operator=(const Character & character)
 {
 	// TODO: tu wstawiæ instrukcjê return
 	return *this;
-}
+}*/
 
 Character::~Character()
 {
-	// call parent movie to delete the character
+	// I guess this is empty because smart pointers can manage themselves
 }
 
 void Character::setName(const string & new_c_name)
@@ -25,7 +28,7 @@ void Character::setDescription(const string & new_c_descr)
 	description = new_c_descr;
 }
 
-void Character::addActor(const sp_Actor new_c_actor)
+void Character::actorAdd(const sp_Actor new_c_actor)
 {
 	for (sp_Actor selected : actors) // checking if we are adding a new actor to the list
 	{
@@ -36,7 +39,7 @@ void Character::addActor(const sp_Actor new_c_actor)
 	actors.push_back(new_c_actor);
 }
 
-void Character::replaceActor(const sp_Actor old_c_actor, const sp_Actor new_c_actor)
+void Character::actorReplace(const sp_Actor old_c_actor, const sp_Actor new_c_actor)
 {
 	for (sp_Actor selected : actors)
 	{
@@ -48,7 +51,7 @@ void Character::replaceActor(const sp_Actor old_c_actor, const sp_Actor new_c_ac
 	}
 }
 
-void Character::removeActor(const sp_Actor c_actor)
+void Character::actorRemove(const sp_Actor c_actor)
 {
 	actors.remove(c_actor);
 }

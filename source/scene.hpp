@@ -14,16 +14,15 @@ using ostream = std::ostream;
 class Scene
 {
 public:
-	Scene(const string &s_name, const string &s_desc, sp_Director director, sp_CharactersVector& s_characters); // constructor (with Characters_
-	// might want to sceneCreate a constructor using CharacterList
+	Scene(const string &s_name, const string &s_desc, sp_Director director, sp_CharactersVector& s_characters); // constructor (with Characters)
 	Scene(const string &s_name, const string &s_desc, sp_Director director); // constructor (without Characters)
-	Scene(const Scene& scene); // copy constructor
-	Scene& operator=(const Scene& scene); //assignment operator
+	//Scene(const Scene& scene); // copy constructor
+	//Scene& operator=(const Scene& scene); //assignment operator
 	~Scene(); // desctructor
 	void replace(sp_Character toReplace, sp_Character withWhom); // changes all appearances of toReplace character into appearances of withWhom character
 	void replace(unsigned int number, sp_Character withWhom); // changes number-th character into withWhom character, if number out of range: do nothing
-	void directorAdd(sp_Director director);
-	void directorRemove(sp_Director director);
+	void directorAdd(sp_Director s_director); // add s_director to scene_directors
+	void directorRemove(sp_Director s_director); // remove s_director from scene_directors, if there is no s_director  : do nothing
 	friend ostream& operator<<(ostream& os,const Scene& sc); // return scene as one stream
 	string getName() const { return name; }; // name getter
 	void setName(string new_name) { name = new_name; }; // name setter
