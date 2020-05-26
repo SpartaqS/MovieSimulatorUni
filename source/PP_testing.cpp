@@ -29,7 +29,6 @@ int main()
 
 	movie1.employ(actor1); // correct: employing actors to movie1
 	movie1.employ(actor2);
-	std::cout << actor1->getPortfolio().size();
 	if (movie1.getCast().size() != 2)
 		std::cout << "actor employment error (Movie::actorEmploy())";
 
@@ -43,7 +42,7 @@ int main()
 	
 	movie1.fire(actor1); // incorrect: trying to remove an actor that does not work on a movie1
 	if (movie1.getCast().size() != 1)
-		std::cout << "nonexistent actor fire error (Movie::actorFire())";
+		std::cout << "error : (Movie::actorFire())";
 
 	movie1.employ(actor1); // add the actor back for further testing
 
@@ -139,7 +138,7 @@ int main()
 	if (os.str() != "Teddy and Bobby are entering the park\n")
 		std::cout << "Error: Scene::replace(sp_Character,sp_Character)\n";
 
-	// creating a more scenes
+	// creating more scenes
 	movie1.sceneCreate("SC2Street", "The traffic lights have turned green\nCars are moving through the street", director1);
 	if (movie1.getScenario().size() != 2)
 		std::cout << "Error creating multiple scenes (should be 2 scenes now)\n";

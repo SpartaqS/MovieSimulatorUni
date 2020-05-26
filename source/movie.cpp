@@ -3,15 +3,6 @@
 #include <iostream> //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Movie::Movie(const string & m_title, const string & m_genre) : title(m_title), genre(m_genre) {}
 
-/*Movie::Movie(const Movie & movie) : title(movie.title) , genre(movie.genre) 
-{
-}
-
-Movie & Movie::operator=(const Movie & movie)
-{
-	return *this;
-}*/
-
 Movie::~Movie()
 {
 	// I guess this is empty because smart pointers can manage themselves

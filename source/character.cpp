@@ -2,17 +2,6 @@
 
 Character::Character(const string & c_name, const string & c_descr) : name(c_name) , description(c_descr) {}
 
-/*Character::Character(const Character & character) : name(character.name) , description(character.description)
-{
-	actors = character.actors;
-}
-
-Character & Character::operator=(const Character & character)
-{
-	// TODO: tu wstawiæ instrukcjê return
-	return *this;
-}*/
-
 Character::~Character()
 {
 	// I guess this is empty because smart pointers can manage themselves

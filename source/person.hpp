@@ -23,9 +23,8 @@ class Person
 {
 public:
 	Person();
-	//Person(const string& given_name); // constructor
-	//Person(const Person& person); // copy constructor
-	//Person& operator=(const Person& person); //assignment operator
+	Person(const string& given_name); // constructor
+	// operator= and copy c-tor make no sense here
 	virtual ~Person(); // destructor -> calls all portfolio movies to act accordingly
 	void quitMovie(const string& m_name); // resign from acting in a movie (calls a particular movie to execute correct methods)
 	string getName() const { return name; }; // name getter

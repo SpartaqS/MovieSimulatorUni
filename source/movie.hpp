@@ -13,8 +13,7 @@ class Movie : std::enable_shared_from_this<Movie>
 {
 public:
 	Movie(const string& m_title, const string& m_genre); //constructor
-	//Movie(const Movie& movie); // copy constructor
-	//Movie& operator= (const Movie& movie); // assignment operator
+	// operator= and copy c-tor make no sense here
 	~Movie(); //destructor
 	/* Actor/Director adding/removing */
 	void employ(sp_Person person); // add an person to team (actors: allow them to play characters, directors : allow them directing scenes), if person already in team : throw exception

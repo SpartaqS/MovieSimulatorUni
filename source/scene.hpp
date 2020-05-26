@@ -16,8 +16,7 @@ class Scene
 public:
 	Scene(const string &s_name, const string &s_desc, sp_Director director, sp_CharactersVector& s_characters); // constructor (with Characters)
 	Scene(const string &s_name, const string &s_desc, sp_Director director); // constructor (without Characters)
-	//Scene(const Scene& scene); // copy constructor
-	//Scene& operator=(const Scene& scene); //assignment operator
+	// operator= and copy c-tor make no sense here
 	~Scene(); // desctructor
 	void replace(sp_Character toReplace, sp_Character withWhom); // changes all appearances of toReplace character into appearances of withWhom character
 	void replace(unsigned int number, sp_Character withWhom); // changes number-th character into withWhom character, if number out of range: do nothing

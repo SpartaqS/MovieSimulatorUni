@@ -18,17 +18,6 @@ Scene::Scene(const string& s_name, const string& s_desc, sp_Director director) :
 	directorAdd(director);
 }
 
-/*Scene::Scene(const Scene& scene) : name(scene.name), description(scene.description), scene_characters(scene.scene_characters), scene_directors(scene.scene_directors) {}
-
-Scene& Scene::operator=(const Scene& scene)
-{
-	name = scene.name;
-	description = scene.description;
-	scene_characters = scene.scene_characters;
-	scene_directors = scene.scene_directors;
-	return *this;
-}*/
-
 Scene::~Scene()
 {
 	// I guess this is empty because smart pointers can manage themselves
