@@ -10,5 +10,5 @@ Director::Director(const string& given_name)
 
 /*Director::~Director()
 {
-	//empty because Base Destructor takes care of everything
+	//nonexistent because Base Destructor takes care of everything
 }*/

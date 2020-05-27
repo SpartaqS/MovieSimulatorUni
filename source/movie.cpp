@@ -1,6 +1,5 @@
 #include "movie.hpp"
 
-#include <iostream> //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Movie::Movie(const string & m_title, const string & m_genre) : title(m_title), genre(m_genre) {}
 
 Movie::~Movie()
@@ -11,8 +10,8 @@ Movie::~Movie()
 void Movie::employ(sp_Person person)
 {
 	team.insert(person);
-	sp_Movie thisMovie = std::make_shared<Movie>(*this);
-	person->movieAdd(thisMovie);
+	sp_Movie thisMovie = std::make_shared<Movie>(*this); //!ISSUE this makes a copy of the movie (which dies after we end method "Movie::employ()" )
+	person->movieAdd(thisMovie);//!ISSUE here I need to pass a shared pointer to the movie that is calling this method
 }
 
 void Movie::fire(sp_Person person)
@@ -21,19 +20,12 @@ void Movie::fire(sp_Person person)
 	if (isInTeam(person)) //if not: do nothing
 	{
 		if (recognizePersonRole(person) == pt_actor)
-		{
 			for (sp_Character sel_character : characters)
-			{
-				std::cout << "removing from character\n";
 				sel_character->actorRemove(std::dynamic_pointer_cast<Actor>(person));
-			}
-		}
 		// if director: cycle through all scenes to remove pointers to "person" from them
 		else if (recognizePersonRole(person) == pt_director)
-		{
 			for (sp_Scene sel_scene : scenario)
 				sel_scene->directorRemove(std::dynamic_pointer_cast<Director>(person));
-		}
 		person->movieRemove(title); // asking "person" to remove this movie from their portfolio
 		team.erase(person);
 	}
@@ -64,7 +56,6 @@ void Movie::characterCreate(const string &c_name, const string &c_descr)
 	if (search_tries > 0) // renaming the character if found at least one with the same name
 		character.setName(character.getName().append(std::to_string(search_tries)));
 	characters.push_back(std::make_shared<Character>(character));
-	int x;
 }
 
 void Movie::remove(sp_Character character)

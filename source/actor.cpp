@@ -11,5 +11,5 @@ Actor::Actor(const string& given_name)
 
 /*Actor::~Actor()
 {
-	//empty because Base Destructor takes care of everything
+	//nonexistent because Base Destructor takes care of everything
 }*/
