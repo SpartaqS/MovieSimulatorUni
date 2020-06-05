@@ -18,5 +18,3 @@ public:
 
 using sp_Director = std::shared_ptr<Director>;
 using sp_DirectorsList = std::list<sp_Director>;
-using wp_Director = std::weak_ptr<Director>;
-using wp_DirectorsSet = std::set<wp_Director>;

@@ -70,7 +70,7 @@ int main()
 		movie1.character("Bobby")->actorAdd(actor3);
 		std::cout << "missing exception in Character::addActor()\n";
 	}
-	catch(std::runtime_error&) {}
+	catch(std::exception&) {}
 
 	if (movie1.character("Bobby")->getActorsCount() != 3)
 		std::cout << "error adding an actor to a character\n";
@@ -108,7 +108,7 @@ int main()
 		movie1.scene("SC1Park");
 		std::cout << "missing exception in Movie::scene() when trying to access nonexistent scene";
 	}
-	catch (std::runtime_error&) {}
+	catch (std::exception&) {}
 	
 	if (movie1.scene("SC1Park1")->getName() != "SC1Park1")
 		std::cout << "Scene::getName() error\n";
@@ -117,7 +117,7 @@ int main()
 		// incorrect : too many "%c" character markers in action description (exception is thrown)
 		movie1.sceneCreate("SC1Park2","Something's wrong? %c asks %c, and %c responds", director1, SC1Characters);
 	}
-	catch (std::runtime_error&) {}
+	catch (std::exception&) {}
 
 	os << *movie1.scene("SC1Park1"); /* playing scene1, scene can be played because there is a director ,output should be:
 	Stephen and Bobby are entering the park
@@ -129,7 +129,7 @@ int main()
 		// incorrect : character "Teddy" not in this action (exception is thrown)
 		movie1.scene("SC1Park1")->replace(movie1.character("Teddy"), movie1.character("Stephen"));
 	}
-	catch (std::runtime_error&) {}
+	catch (std::exception&) {}
 	movie1.scene("SC1Park1")->replace(movie1.character("Stephen"), movie1.character("Teddy")); // correct : replacing character "Stephen" with "Teddy"
 	os.str(""); // emptying the stream
 	os  << *movie1.scene("SC1Park1"); /* playing scene1, output should be:
@@ -215,8 +215,5 @@ int main()
 		std::cout << "Error: movie1.credits() 2: This one does not work because I do not know how Movie can pass a \"shared_ptr to itself\" as a parameter for Person::movieAdd(sp_Movie)\n";
 	std::cout << os.str() << "should be:\n" << credits_test2;
 	std::cout << "Showcase tests ended\n";
-	printf("_MSC_VER : %d \n", _MSC_VER);
-	printf("_MSC_FULL_VER : %d \n", _MSC_FULL_VER);
-	printf("_MSC_BUILD : %d \n", _MSC_BUILD);
 	return 0;
 }

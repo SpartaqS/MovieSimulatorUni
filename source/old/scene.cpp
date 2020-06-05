@@ -9,7 +9,7 @@
 Scene::Scene(const string& s_name, const string& s_desc, sp_Director director, sp_CharactersVector& characters) : name(s_name), description(s_desc), scene_characters(characters)
 {
 	if ( charactersInDescription() != scene_characters.size() ) // handling incorrect number of "%s" and characters in pass_characters
-		throw std::runtime_error("Number of characters in scene.description is different than number of given character pointers.");
+		throw std::exception("Number of characters in scene.description is different than number of given character pointers.");
 	directorAdd(director);
 }
 

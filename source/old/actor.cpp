@@ -4,7 +4,10 @@
 #include "actor.hpp"
 
 
-Actor::Actor(const string& given_name) : Person(given_name) {}
+Actor::Actor(const string& given_name)
+{
+	name = given_name;
+}
 
 /*Actor::~Actor()
 {

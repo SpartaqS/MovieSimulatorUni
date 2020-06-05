@@ -3,7 +3,10 @@
 
 #include "director.hpp"
 
-Director::Director(const string& given_name) : Person(given_name) {}
+Director::Director(const string& given_name)
+{
+	name = given_name;
+}
 
 /*Director::~Director()
 {

@@ -7,57 +7,27 @@ Movie::~Movie()
 	// I guess this is empty because smart pointers can manage themselves
 }
 
-void Movie::employ(wp_Person person)
+void Movie::employ(sp_Person person)
 {
-	misc.insert(person);
-	person.lock()->movieAdd(me_);
+	team.insert(person);
+	sp_Movie thisMovie = std::make_shared<Movie>(*this); //!ISSUE this makes a copy of the movie (which dies after we end method "Movie::employ()" )
+	person->movieAdd(thisMovie);//!ISSUE here I need to pass a shared pointer to the movie that is calling this method
 }
 
-void Movie::employ(wp_Actor person)
+void Movie::fire(sp_Person person)
 {
-	cast.insert(person);
-	person.lock()->movieAdd(me_);
-}
-void Movie::employ(wp_Director person)
-{
-	directors.insert(person);
-	person.lock()->movieAdd(me_);
-}
-
-/*
-void Movie::fire(wp_Person person) //split into separate functions for actor, director
-{
-	if (isWorkingForThisMovie(person)) //if not: do nothing
+	// if actor: cycle through all characters to remove pointers to "person" from them
+	if (isInTeam(person)) //if not: do nothing
 	{
-		person.lock()->movieRemove(me_); // asking "person" to remove this movie from their portfolio
-		cast.erase(person);
-	}
-}
-*/
-void Movie::fire(wp_Person person)
-{
-	misc.erase(person); // if person does not work for this movie, then nothing happens (containers take care of it)
-}
-
-void Movie::fire(wp_Actor person)
-{
-	if (isWorkingForThisMovie(person)) //if not: do nothing
-	{
-		for (sp_Character sel_character : characters)
-			sel_character->actorRemove(person.lock());
-		person.lock()->movieRemove(me_); // asking "person" to remove this movie from their portfolio
-		cast.erase(person);
-	}
-}
-
-void Movie::fire(wp_Director person)
-{
-	if (isWorkingForThisMovie(person)) //if not: do nothing
-	{
-		for (sp_Scene sel_scene : scenario)
-			sel_scene->directorRemove(person.lock());
-		person.lock()->movieRemove(me_); // asking "person" to remove this movie from their portfolio
-		directors.erase(person);
+		if (recognizePersonRole(person) == pt_actor)
+			for (sp_Character sel_character : characters)
+				sel_character->actorRemove(std::dynamic_pointer_cast<Actor>(person));
+		// if director: cycle through all scenes to remove pointers to "person" from them
+		else if (recognizePersonRole(person) == pt_director)
+			for (sp_Scene sel_scene : scenario)
+				sel_scene->directorRemove(std::dynamic_pointer_cast<Director>(person));
+		person->movieRemove(title); // asking "person" to remove this movie from their portfolio
+		team.erase(person);
 	}
 }
 
@@ -117,7 +87,7 @@ sp_Character Movie::character(const string & c_name)
 		}
 	}
 	// no character found: throw exception
-	throw std::runtime_error("Exception: Movie::character(c_name) : no character with specified name in the list of chaarcters");
+	throw std::exception("Exception: Movie::character(c_name) : no character with specified name in the list of chaarcters");
 }
 
 void Movie::sceneCreate(const string& s_name, const string& s_desc, sp_Director director, sp_CharactersVector& s_characters)
@@ -166,13 +136,13 @@ sp_Scene Movie::scene(const string & s_name)
 		}
 	}
 	// no scene found: throw exception
-	throw std::runtime_error("Exception: Movie::scene(s_name) : no scene with specified name in the list of scenes (scenario)");
+	throw std::exception("Exception: Movie::scene(s_name) : no scene with specified name in the list of scenes (scenario)");
 }
 
 sp_Scene Movie::scene(const unsigned int s_number)
 {
 	if (s_number > scenario.size()) //if out of range then throw exception
-		throw std::runtime_error("Exception: Movie::scene(s_number) : provided s_number is out of range (there are less scenes than that)");
+		throw std::exception("Exception: Movie::scene(s_number) : provided s_number is out of range (there are less scenes than that)");
 	else
 	{
 		unsigned int sel_num = 0;
@@ -183,16 +153,16 @@ sp_Scene Movie::scene(const unsigned int s_number)
 			++sel_num;
 		}
 	}
-	//throw std::exception("Exception: Movie::scene() : Scene was not found");
-	throw std::runtime_error("Exception: Movie::scene() : Scene was not found");
 }
 
 ostream& Movie::credits(ostream& os) // !!!!!!!!!!!!!!!!!!!
 {
 	os << "  Directed by:\n"; // printing all directors
-	for (wp_Director sel_person : directors)
-			os << sel_person.lock()->getName() <<"\n";
-
+	for (sp_Person sel_person : team)
+	{
+		if (recognizePersonRole(sel_person) == pt_director)
+			os << sel_person->getName() <<"\n";
+	}
 	os << "\n  Roles:\n";
 	for (sp_Character sel_character : characters) // printing out all characters with actors playing them
 	{
@@ -267,20 +237,23 @@ bool Movie::isCharacterInScenario(const string& c_name)
 	return false;
 }
 
-bool Movie::isWorkingForThisMovie(wp_Actor person)
+bool Movie::isInTeam(sp_Person person)
 {
-	for (wp_Actor sel_person : cast)
-		if (sel_person.lock() == person.lock())
+	for (sp_Person sel_person : team)
+		if (sel_person == person)
 			return true;
 	return false;
 }
 
-bool Movie::isWorkingForThisMovie(wp_Director person)
+personType Movie::recognizePersonRole(sp_Person person)
 {
-	for (wp_Director sel_person : directors)
-		if (sel_person.lock() == person.lock())
-			return true;
-	return false;
+	sp_Actor testActor;
+	sp_Director testDirector;
+	if ((testActor = std::dynamic_pointer_cast<Actor>(person)) != nullptr)
+		return pt_actor;
+	else if ((testDirector = std::dynamic_pointer_cast<Director>(person)) != nullptr)
+		return pt_director;
+	return pt_base;
 }
 
 ostream& Movie::play(ostream & os)

@@ -1,5 +1,6 @@
 #include "person.hpp"
 #include "movie.hpp"
+
 Person::Person()
 {
 	name = "UNNAMED";
@@ -15,34 +16,32 @@ Person::~Person()
 	// I guess this is empty because smart pointers can manage themselves
 }
 
-void Person::quitMovie(const string& m_name)
+void Person::quitMovie(const string& movie_name)
 {
-	for (sp_Movie movie : portfolio)
-		if (movie->getTitle() == m_name) // movie is removed from portfolio via removeMovie(), called by the movie that is being removed
-		{
-			movie->fire(std::make_shared<Person>(*this)); //!ISSUE here I need to pass a shared pointer to the person that is calling the method, so Movie can compare it with its own pointer to this Person (and do stuff from Movie::fire() )
-		} //!ISSUE again, the new pointer immiedately dies after leaving this method (Person::quitMovie() ), so we have problems.
+	for (wp_Movie sel_movie : portfolio)
+		if (sel_movie.lock()->getTitle() == movie_name)
+			sel_movie.lock()->fire(me_);
 }
 
-void Person::movieAdd(sp_Movie movie)
+void Person::quitMovie(wp_Movie movie)
+{
+	portfolio.find(movie)->lock()->fire(me_);
+}
+
+void Person::movieAdd(wp_Movie movie)
 {
 	portfolio.insert(movie);
 }
 
-void Person::movieRemove(const string& m_name)
+void Person::movieRemove(wp_Movie movie)
 {
-	for (sp_Movie movie : portfolio)
-		if (movie->getTitle() == m_name) // movie is removed from portfolio via removeMovie(), called by the movie that is being removed
-		{
-			portfolio.erase(movie);
-			break;
-		}
+	portfolio.erase(movie);
 }
 
 void Person::joinAllMovies()
 {
-	for (sp_Movie selected : portfolio)
+	for (wp_Movie selected : portfolio)
 	{
-		selected->employ(std::make_shared<Person>(*this));
+		selected.lock()->employ(me_);
 	}
 }
