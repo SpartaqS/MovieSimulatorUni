@@ -9,36 +9,14 @@ Movie::~Movie()
 
 void Movie::employ(wp_Person person)
 {
-	misc.insert(person);
 	person.lock()->movieAdd(me_);
 }
 
-void Movie::employ(wp_Actor person)
-{
-	cast.insert(person);
-	person.lock()->movieAdd(me_);
-}
-void Movie::employ(wp_Director person)
-{
-	directors.insert(person);
-	person.lock()->movieAdd(me_);
-}
-
-/*
-void Movie::fire(wp_Person person) //split into separate functions for actor, director
-{
-	if (isWorkingForThisMovie(person)) //if not: do nothing
-	{
-		person.lock()->movieRemove(me_); // asking "person" to remove this movie from their portfolio
-		cast.erase(person);
-	}
-}
-*/
 void Movie::fire(wp_Person person)
 {
-	misc.erase(person); // if person does not work for this movie, then nothing happens (containers take care of it)
+	person.lock()->quitMovie(me_); // if person does not work for this movie, then nothing happens (person will not find this move in their portfolio)
 }
-
+/* TO IDZIE DO ACTOR.CPP i DIRECTOR.CPP
 void Movie::fire(wp_Actor person)
 {
 	if (isWorkingForThisMovie(person)) //if not: do nothing
@@ -60,7 +38,7 @@ void Movie::fire(wp_Director person)
 		directors.erase(person);
 	}
 }
-
+*/
 void Movie::actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2)
 {
 	for (sp_Character sel_character : characters)
@@ -203,7 +181,7 @@ ostream& Movie::credits(ostream& os) // !!!!!!!!!!!!!!!!!!!
 		} // printing actors
 		else 
 		{
-			unsigned int actor_num = 1;
+			size_t actor_num = 1;
 			for (sp_Actor sel_actor : sel_character->getActorsList())
 			{
 				if (actor_num == 2) // start listing the one stunt

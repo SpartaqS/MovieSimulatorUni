@@ -28,23 +28,28 @@ using string = std::string;
 class Person // actual definition
 {
 public:
+	static sp_Person createPerson(const string& given_name)
+	{
+		sp_Person person = std::make_shared<Person>(given_name);
+		person->me_ = person;
+		return person;
+	};
 	Person();
 	Person(const string& given_name); // constructor
 	// operator= and copy c-tor make no sense here
 	virtual ~Person(); // destructor -> calls all portfolio movies to act accordingly
-	void quitMovie(const string& movie_name); // resign from acting in a movie with "movie_name" title. If no movie with this name: do nothing
-	void quitMovie(wp_Movie movie); // resign from acting in a movie (calls a particular movie to execute correct methods)
+	virtual void quitMovie(const string& movie_name); // resign from acting in a movie with "movie_name" title. If no movie with this name: do nothing
+	virtual void quitMovie(wp_Movie movie); // resign from acting in a movie (calls a particular movie to execute correct methods)
 	string getName() const { return name; }; // name getter
 	wp_MovieSet getPortfolio() const { return portfolio; }; // portfolio getter
-	void movieAdd(wp_Movie movie); // add "movie" to the portfolio !!! this should only be called by Movie::employ()
-	void movieRemove(wp_Movie movie); //remove "movie" from portfolio : !!! this should only be called by Movie::fire()
+	virtual void movieAdd(wp_Movie movie); // add "movie" to the portfolio !!! this should only be called by Movie::employ()
 	//friend std::ostream& operator<<(std::ostream& os, const Character& character); // return name as ostream&
-private:
+protected:
 	string name;
 	wp_MovieSet portfolio;
 	void joinAllMovies();
+private:	
 	wp_Person me_;
-public:
 };
 
 //#include "movie.hpp" // ????

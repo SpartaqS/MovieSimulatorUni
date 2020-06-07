@@ -20,22 +20,19 @@ void Person::quitMovie(const string& movie_name)
 {
 	for (wp_Movie sel_movie : portfolio)
 		if (sel_movie.lock()->getTitle() == movie_name)
-			sel_movie.lock()->fire(me_);
+			quitMovie(sel_movie);
 }
 
 void Person::quitMovie(wp_Movie movie)
 {
-	portfolio.find(movie)->lock()->fire(me_);
+	portfolio.find(movie)->lock()->getMisc().erase(me_);
+	portfolio.erase(movie);
 }
 
 void Person::movieAdd(wp_Movie movie)
 {
 	portfolio.insert(movie);
-}
-
-void Person::movieRemove(wp_Movie movie)
-{
-	portfolio.erase(movie);
+	movie.lock()->getMisc().insert(me_);
 }
 
 void Person::joinAllMovies()

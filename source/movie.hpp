@@ -23,12 +23,7 @@ public:
 	~Movie(); //destructor
 	/* Actor/Director adding/removing */
 	void employ(wp_Person person); // add an movie to cast (actors: allow them to play characters, directors : allow them directing scenes), if person already in cast : throw exception
-	void employ(wp_Actor person);
-	void employ(wp_Director person);
-	//void fire(wp_Person person); // remove the movie from the cast, call critical methods to handle this situation, if movie nonexistent in cast : throw exception
-	void fire(wp_Person person);
-	void fire(wp_Actor person);
-	void fire(wp_Director person);
+	void fire(wp_Person person); // remove the movie from the cast, call critical methods to handle this situation, if person not working for this movie : do nothing
 	/* Actor Management */
 	void actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2); // swap all occurences of actor1 and actor2 in characters (list)
 	/* Character Management */
@@ -55,6 +50,8 @@ public:
 	sp_ScenesList getScenario() { return scenario; }; //scenario (scene list) getter
 	sp_CharactersList getCharacters() { return characters; }; // characters getter
 	wp_ActorsSet getCast() { return cast; }; // cast (movie list) getter
+	wp_DirectorsSet getDirectors() { return directors; }
+	wp_PersonsSet getMisc() { return misc; };
 private:
 	string title;
 	string genre;
