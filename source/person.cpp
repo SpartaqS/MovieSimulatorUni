@@ -16,14 +16,14 @@ Person::~Person()
 	// I guess this is empty because smart pointers can manage themselves
 }
 
-void Person::quitMovie(wp_Movie movie)
+void Person::quitMovie(sp_Movie movie)
 {
-	portfolio.find(movie)->lock()->getMisc().erase(me_);
+	movie->getMisc().erase(me_.lock());
 	portfolio.erase(movie);
 }
 
-void Person::movieAdd(wp_Movie movie)
+void Person::movieAdd(sp_Movie movie)
 {
 	portfolio.insert(movie);
-	movie.lock()->getMisc().insert(me_);
+	movie->getMisc().insert(me_.lock());
 }

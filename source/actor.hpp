@@ -11,7 +11,7 @@ class Actor;
 using sp_Actor = std::shared_ptr<Actor>;
 using sp_ActorsList = std::list<sp_Actor>;
 using wp_Actor = std::weak_ptr<Actor>;
-using wp_ActorsSet = std::set<wp_Actor>;
+using sp_ActorsSet = std::set<sp_Actor>;
 
 class Actor : public Person
 {
@@ -24,12 +24,12 @@ public:
 	};
 	Actor(const string &given_name); // constructor
 	//virtual void quitMovie(const string& movie_name);
-	virtual void quitMovie(wp_Movie movie); // resign from acting in a movie
-	virtual void movieAdd(wp_Movie movie);
+	virtual void quitMovie(sp_Movie movie); // resign from acting in a movie
+	virtual void movieAdd(sp_Movie movie);
 	//virtual ~Actor(); // destructor -> calls all portfolio movies to act accordingly
 private:
 	string name;
-	wp_MovieSet portfolio;
+	sp_MovieSet portfolio;
 	wp_Actor me_;
 };
 

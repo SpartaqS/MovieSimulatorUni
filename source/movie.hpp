@@ -49,23 +49,23 @@ public:
 	void setGenre(const string& m_new_genre); // genre setter
 	sp_ScenesList getScenario() { return scenario; }; //scenario (scene list) getter
 	sp_CharactersList getCharacters() { return characters; }; // characters getter
-	wp_ActorsSet getCast() { return cast; }; // cast (movie list) getter
+	sp_ActorsSet getCast() { return cast; }; // cast (movie list) getter
 	wp_DirectorsSet getDirectors() { return directors; }
-	wp_PersonsSet getMisc() { return misc; };
+	sp_PersonsSet getMisc() { return misc; };
 private:
 	string title;
 	string genre;
 	sp_ScenesList scenario;
 	sp_CharactersList characters;
-	wp_ActorsSet cast;
+	sp_ActorsSet cast;
 	wp_DirectorsSet directors;
-	wp_PersonsSet misc;
+	sp_PersonsSet misc;
 	bool isDuplicateCharacterByName(string c_name, unsigned int copy_num);
 	bool isDuplicateSceneByName(string s_name, unsigned int copy_num);
 	bool isCharacterInScenario(const string& c_name);
 	bool isWorkingForThisMovie(wp_Actor person);
 	bool isWorkingForThisMovie(wp_Director person);
-	wp_Movie me_;
+	sp_Movie me_;
 };
 
 #endif // !movie_hpp
