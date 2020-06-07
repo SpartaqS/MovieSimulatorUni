@@ -45,10 +45,10 @@ int main()
 		std::cout << "error : (Movie::actorFire())\n";
 
 	movie1->employ(actor1); // add the actor back for further testing
-
+	movie1->employ(actor3);
 //////* Creating Directors and employing them */
 
-	std::shared_ptr<Director> director1 = std::make_shared<Director>("Zedaph Zebra");
+	std::shared_ptr<Director> director1 = Director::createDirector("Zedaph Zebra");
 	movie1->employ(director1);
 
 	//////* Creating Characters and assigning Actors to them */
@@ -197,7 +197,6 @@ int main()
 	string credits_test1 = "  Directed by:\nZedaph Zebra\n\n  Roles:\nBobby - Bernard Baker, stunts: Carol Ceasfire, Adam Actual\nStephen - Adam Actual, stunt: Carol Ceasfire\nTeddy - *Computer Generated*\n";
 	if (os.str() != credits_test1)
 		std::cout << "Error: movie1->credits() 1\n";
-	
 	//movie1->fire(actor3);
 	actor3->quitMovie(movie1); // correct : Carol Ceasfire resigns from working on a movie
 	os.str("");
@@ -213,7 +212,6 @@ int main()
 	string credits_test2 = "  Directed by:\nZedaph Zebra\n\n  Roles:\nBobby - Bernard Baker, stunt: Adam Actual\nStephen - Adam Actual\nTeddy - *Computer Generated*\n";
 	if (os.str() != credits_test2)
 		std::cout << "Error: movie1->credits() 2: This one does not work because I do not know how Movie can pass a \"shared_ptr to itself\" as a parameter for Person::movieAdd(sp_Movie)\n";
-	std::cout << os.str() << "should be:\n" << credits_test2;
 	std::cout << "Showcase tests ended\n";
 	printf("_MSC_VER : %d \n", _MSC_VER);
 	printf("_MSC_FULL_VER : %d \n", _MSC_FULL_VER);

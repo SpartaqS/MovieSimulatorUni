@@ -16,18 +16,20 @@ void Actor::quitMovie(const string& movie_name)
 
 void Actor::quitMovie(sp_Movie movie)
 {
-	movie->getCast().erase(me_.lock());
-	portfolio.erase(movie);
+	if (movie->isWorkingForThisMovie(me_.lock())) //if not: do nothing
+	{
+		std::cout << "Actor leaving movie: " << name << "\n";
+		for (sp_Character sel_character : movie->getCharacters())
+			sel_character->actorRemove(me_.lock());
+		movie->getCast().erase(me_.lock());
+		portfolio.erase(movie);
+	}
 }
 
 void Actor::movieAdd(sp_Movie movie)
 {
-	std::cout << "added by actor\n";
 	portfolio.insert(movie);
-	sp_Actor temp = me_.lock();
-	movie->getCast().insert(temp);
-	std::cout << "size now :" << movie->getCast().size() << "\n";
-	int x = 1;
+	movie->getCast().insert(me_.lock());
 }
 
 /*Actor::~Actor()

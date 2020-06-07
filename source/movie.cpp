@@ -168,8 +168,8 @@ sp_Scene Movie::scene(const unsigned int s_number)
 ostream& Movie::credits(ostream& os) // !!!!!!!!!!!!!!!!!!!
 {
 	os << "  Directed by:\n"; // printing all directors
-	for (wp_Director sel_person : directors)
-			os << sel_person.lock()->getName() <<"\n";
+	for (sp_Director sel_person : directors)
+		os << sel_person->getName() << "\n";
 
 	os << "\n  Roles:\n";
 	for (sp_Character sel_character : characters) // printing out all characters with actors playing them

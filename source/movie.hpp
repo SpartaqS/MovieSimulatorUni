@@ -47,24 +47,25 @@ public:
 	void setTitle(const string& m_new_title); // title setter
 	string getGenre() const { return genre; }; // genre getter
 	void setGenre(const string& m_new_genre); // genre setter
-	sp_ScenesList getScenario() { return scenario; }; //scenario (scene list) getter
-	sp_CharactersList getCharacters() { return characters; }; // characters getter
-	sp_ActorsSet getCast() { return cast; }; // cast (Actor set) getter
-	wp_DirectorsSet getDirectors() { return directors; } // directors (Director set) getter
-	sp_PersonsSet getMisc() { return misc; }; // misc (Person set) getter
+	sp_ScenesList& getScenario() { return scenario; }; //scenario (scene list) getter/setter
+	sp_CharactersList& getCharacters() { return characters; }; // characters getter/setter
+	sp_ActorsSet& getCast() { return cast; }; // cast (Actor set) getter/setter
+	sp_DirectorsSet& getDirectors() { return directors; } // directors (Director set) getter/setter
+	sp_PersonsSet& getMisc() { return misc; }; // misc (Person set) getter/setter
+
+	bool isWorkingForThisMovie(wp_Actor person);
+	bool isWorkingForThisMovie(wp_Director person);
 private:
 	string title;
 	string genre;
 	sp_ScenesList scenario;
 	sp_CharactersList characters;
 	sp_ActorsSet cast;
-	wp_DirectorsSet directors;
+	sp_DirectorsSet directors;
 	sp_PersonsSet misc;
 	bool isDuplicateCharacterByName(string c_name, unsigned int copy_num);
 	bool isDuplicateSceneByName(string s_name, unsigned int copy_num);
 	bool isCharacterInScenario(const string& c_name);
-	bool isWorkingForThisMovie(wp_Actor person);
-	bool isWorkingForThisMovie(wp_Director person);
 	sp_Movie me_;
 };
 
