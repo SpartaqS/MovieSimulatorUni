@@ -15,7 +15,7 @@
 
 class Movie;
 using wp_Movie = std::weak_ptr<Movie>;
-using wp_MovieSet = std::set<wp_Movie>;
+using wp_MovieSet = std::set<std::weak_ptr<Movie>>;
 using sp_Movie = std::shared_ptr<Movie>;
 
 class Person; //predefinition
@@ -42,14 +42,10 @@ public:
 	string getName() const { return name; }; // name getter
 	wp_MovieSet getPortfolio() const { return portfolio; }; // portfolio getter
 	virtual void movieAdd(wp_Movie movie); // add "movie" to the portfolio !!! this should only be called by Movie::employ()
-	//friend std::ostream& operator<<(std::ostream& os, const Character& character); // return name as ostream&
-protected:
+private:
 	string name;
 	wp_MovieSet portfolio;
-private:	
 	wp_Person me_;
 };
-
-//#include "movie.hpp" // ????
 
 #endif // !person_hpp

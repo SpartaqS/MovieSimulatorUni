@@ -26,6 +26,8 @@ public:
 	// operator= and copy c-tor make no sense here
 	//virtual ~Director(); // destructor -> calls all portfolio movies to act accordingly
 private:
+	string name;
+	wp_MovieSet portfolio;
 	wp_Director me_;
 };
 #endif // !director_hpp

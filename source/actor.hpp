@@ -28,6 +28,8 @@ public:
 	virtual void movieAdd(wp_Movie movie);
 	//virtual ~Actor(); // destructor -> calls all portfolio movies to act accordingly
 private:
+	string name;
+	wp_MovieSet portfolio;
 	wp_Actor me_;
 };
 
