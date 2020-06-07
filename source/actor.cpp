@@ -5,13 +5,13 @@
 #include "movie.hpp"
 
 Actor::Actor(const string& given_name) : Person(given_name) {}
-
+/*
 void Actor::quitMovie(const string& movie_name)
 {
 	for (wp_Movie sel_movie : portfolio)
 		if (sel_movie.lock()->getTitle() == movie_name)
 			quitMovie(sel_movie);
-}
+}*/
 
 void Actor::quitMovie(wp_Movie movie)
 {

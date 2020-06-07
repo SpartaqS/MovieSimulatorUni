@@ -23,7 +23,7 @@ public:
 		return actor;
 	};
 	Actor(const string &given_name); // constructor
-	virtual void quitMovie(const string& movie_name);
+	//virtual void quitMovie(const string& movie_name);
 	virtual void quitMovie(wp_Movie movie); // resign from acting in a movie
 	virtual void movieAdd(wp_Movie movie);
 	//virtual ~Actor(); // destructor -> calls all portfolio movies to act accordingly

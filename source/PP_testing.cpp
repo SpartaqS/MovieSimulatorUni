@@ -199,7 +199,7 @@ int main()
 		std::cout << "Error: movie1->credits() 1\n";
 	
 	//movie1->fire(actor3);
-	actor3->quitMovie("Super Original Movie"); // correct : Carol Ceasfire resigns from working on a movie
+	actor3->quitMovie(movie1); // correct : Carol Ceasfire resigns from working on a movie
 	os.str("");
 	movie1->credits(os); /* now credits do not show Carol Ceasfire...
 	  Directed by:

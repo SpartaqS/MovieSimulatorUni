@@ -68,9 +68,4 @@ private:
 	wp_Movie me_;
 };
 
-
-using string = std::string;
-//using wp_Movie = std::shared_ptr<Movie>;
-//using sp_MovieList = std::list<wp_Movie>;
-
 #endif // !movie_hpp

@@ -38,7 +38,6 @@ public:
 	Person(const string& given_name); // constructor
 	// operator= and copy c-tor make no sense here
 	virtual ~Person(); // destructor -> calls all portfolio movies to act accordingly
-	virtual void quitMovie(const string& movie_name); // resign from acting in a movie with "movie_name" title. If no movie with this name: do nothing
 	virtual void quitMovie(wp_Movie movie); // resign from acting in a movie (calls a particular movie to execute correct methods)
 	string getName() const { return name; }; // name getter
 	wp_MovieSet getPortfolio() const { return portfolio; }; // portfolio getter
@@ -47,7 +46,6 @@ public:
 protected:
 	string name;
 	wp_MovieSet portfolio;
-	void joinAllMovies();
 private:	
 	wp_Person me_;
 };
