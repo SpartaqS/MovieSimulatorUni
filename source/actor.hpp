@@ -10,8 +10,8 @@
 class Actor;
 using sp_Actor = std::shared_ptr<Actor>;
 using sp_ActorsList = std::list<sp_Actor>;
-using wp_Actor = std::weak_ptr<Actor>;
 using sp_ActorsSet = std::set<sp_Actor>;
+using wp_Actor = std::weak_ptr<Actor>;
 
 class Actor : public Person
 {

@@ -1,5 +1,6 @@
 /* Actor declaration
 */
+#include <iostream>
 
 #include "actor.hpp"
 #include "movie.hpp"
@@ -21,8 +22,12 @@ void Actor::quitMovie(sp_Movie movie)
 
 void Actor::movieAdd(sp_Movie movie)
 {
+	std::cout << "added by actor\n";
 	portfolio.insert(movie);
-	movie->getMisc().insert(me_.lock());
+	sp_Actor temp = me_.lock();
+	movie->getCast().insert(temp);
+	std::cout << "size now :" << movie->getCast().size() << "\n";
+	int x = 1;
 }
 
 /*Actor::~Actor()

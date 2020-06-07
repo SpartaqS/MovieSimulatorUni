@@ -30,11 +30,11 @@ int main()
 	movie1->employ(actor1); // correct: employing actors to movie1
 	movie1->employ(actor2);
 	if (movie1->getCast().size() != 2)
-		std::cout << "actor employment error (Movie::actorEmploy())";
+		std::cout << "actor employment error (Movie::actorEmploy())\n";
 
 	movie1->employ(actor2); // trying to employ an actor who already works on movie1
 	if (movie1->getCast().size() != 2)
-		std::cout << "duplicate actor employment error (Movie::actorEmploy())";
+		std::cout << "duplicate actor employment error (Movie::actorEmploy())\n";
 
 	movie1->fire(actor1); // correct: trying to remove an actor that does works on a movie1
 	if (movie1->getCast().size() != 1)
@@ -42,7 +42,7 @@ int main()
 	
 	movie1->fire(actor1); // incorrect: trying to remove an actor that does not work on a movie1
 	if (movie1->getCast().size() != 1)
-		std::cout << "error : (Movie::actorFire())";
+		std::cout << "error : (Movie::actorFire())\n";
 
 	movie1->employ(actor1); // add the actor back for further testing
 
@@ -106,7 +106,7 @@ int main()
 	try {
 		// incorrect : trying to access a scene which does not exist
 		movie1->scene("SC1Park");
-		std::cout << "missing exception in Movie::scene() when trying to access nonexistent scene";
+		std::cout << "missing exception in Movie::scene() when trying to access nonexistent scene\n";
 	}
 	catch (std::runtime_error&) {}
 	

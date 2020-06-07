@@ -49,9 +49,9 @@ public:
 	void setGenre(const string& m_new_genre); // genre setter
 	sp_ScenesList getScenario() { return scenario; }; //scenario (scene list) getter
 	sp_CharactersList getCharacters() { return characters; }; // characters getter
-	sp_ActorsSet getCast() { return cast; }; // cast (movie list) getter
-	wp_DirectorsSet getDirectors() { return directors; }
-	sp_PersonsSet getMisc() { return misc; };
+	sp_ActorsSet getCast() { return cast; }; // cast (Actor set) getter
+	wp_DirectorsSet getDirectors() { return directors; } // directors (Director set) getter
+	sp_PersonsSet getMisc() { return misc; }; // misc (Person set) getter
 private:
 	string title;
 	string genre;

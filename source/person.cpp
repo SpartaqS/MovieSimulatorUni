@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "person.hpp"
 #include "movie.hpp"
 
@@ -24,6 +26,7 @@ void Person::quitMovie(sp_Movie movie)
 
 void Person::movieAdd(sp_Movie movie)
 {
+	std::cout << "added by person\n";
 	portfolio.insert(movie);
 	movie->getMisc().insert(me_.lock());
 }
