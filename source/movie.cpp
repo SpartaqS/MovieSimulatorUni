@@ -95,7 +95,7 @@ sp_Character Movie::character(const string & c_name)
 		}
 	}
 	// no character found: throw exception
-	throw std::runtime_error("Exception: Movie::character(c_name) : no character with specified name in the list of chaarcters");
+	throw std::runtime_error("Exception: Movie::character(c_name) : no character with specified name in the list of charcters");
 }
 
 void Movie::sceneCreate(const string& s_name, const string& s_desc, sp_Director director, sp_CharactersVector& s_characters)
