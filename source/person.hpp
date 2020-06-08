@@ -16,6 +16,7 @@
 class Movie;
 using sp_Movie = std::shared_ptr<Movie>;
 using sp_MovieSet = std::set<sp_Movie>;
+using wp_Movie = std::weak_ptr<Movie>;
 
 class Person; //predefinition
 using wp_Person = std::weak_ptr<Person>;
@@ -37,10 +38,10 @@ public:
 	Person(const string& given_name); // constructor
 	// operator= and copy c-tor make no sense here
 	virtual ~Person(); // destructor -> calls all portfolio movies to act accordingly
-	virtual void quitMovie(sp_Movie movie); // resign from acting in a movie (calls a particular movie to execute correct methods)
+	virtual void quitMovie(wp_Movie movie); // resign from acting in a movie (calls a particular movie to execute correct methods)
 	string getName() const { return name; }; // name getter
 	sp_MovieSet getPortfolio() const { return portfolio; }; // portfolio getter
-	virtual void movieAdd(sp_Movie movie); // add "movie" to the portfolio !!! this should only be called by Movie::employ()
+	virtual void movieAdd(wp_Movie movie); // add "movie" to the portfolio !!! this should only be called by Movie::employ()
 private:
 	string name;
 	wp_Person me_;

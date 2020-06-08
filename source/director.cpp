@@ -10,19 +10,19 @@ Director::Director(const string& given_name) : Person(given_name) {}
 	//nonexistent because Base Destructor takes care of everything
 }*/
 
-void Director::quitMovie(sp_Movie movie)
+void Director::quitMovie(wp_Movie movie)
 {
-	if (movie->isWorkingForThisMovie(me_.lock())) //if not: do nothing
+	if (movie.lock()->isWorkingForThisMovie(me_.lock())) //if not: do nothing
 	{
-		for (sp_Scene sel_scene : movie->getScenario())
+		for (sp_Scene sel_scene : movie.lock()->getScenario())
 			sel_scene->directorRemove(me_.lock());
-		movie->getDirectors().erase(me_.lock());
-		portfolio.erase(movie);
+		movie.lock()->getDirectors().erase(me_.lock());
+		portfolio.erase(movie.lock());
 	}
 }
 
-void Director::movieAdd(sp_Movie movie)
+void Director::movieAdd(wp_Movie movie)
 {
-	portfolio.insert(movie);
-	movie->getDirectors().insert(me_.lock());
+	portfolio.insert(movie.lock());
+	movie.lock()->getDirectors().insert(me_.lock());
 }

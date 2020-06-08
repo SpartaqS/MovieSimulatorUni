@@ -22,8 +22,8 @@ public:
 	// operator= and copy c-tor make no sense here
 	~Movie(); //destructor
 	/* Actor/Director adding/removing */
-	void employ(wp_Person person); // add an movie to cast (actors: allow them to play characters, directors : allow them directing scenes), if person already in cast : throw exception
-	void fire(wp_Person person); // remove the movie from the cast, call critical methods to handle this situation, if person not working for this movie : do nothing
+	void employ(wp_Person person); // add the person to the movie (actors: allow them to play characters, directors : allow them directing scenes), if person already in cast : throw exception
+	void fire(wp_Person person); // remove the person from the movie, call critical methods to handle this situation, if person not working for this movie : do nothing
 	/* Actor Management */
 	void actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2); // swap all occurences of actor1 and actor2 in characters (list)
 	/* Character Management */
@@ -66,7 +66,7 @@ private:
 	bool isDuplicateCharacterByName(string c_name, unsigned int copy_num);
 	bool isDuplicateSceneByName(string s_name, unsigned int copy_num);
 	bool isCharacterInScenario(const string& c_name);
-	sp_Movie me_;
+	wp_Movie me_;
 };
 
 #endif // !movie_hpp

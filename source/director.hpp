@@ -23,8 +23,8 @@ public:
 		return director;
 	};
 	Director(const string &given_name); // constructor
-	virtual void quitMovie(sp_Movie movie);
-	virtual void movieAdd(sp_Movie movie);
+	virtual void quitMovie(wp_Movie movie);
+	virtual void movieAdd(wp_Movie movie);
 	// operator= and copy c-tor make no sense here
 	//virtual ~Director(); // destructor -> calls all portfolio movies to act accordingly
 private:

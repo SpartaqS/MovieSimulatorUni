@@ -95,7 +95,7 @@ int main(int argc, char * argv[])
 						std::getline(std::cin, buffer_clearer); // clearing the buffer (not doing so causes "double input")
 						for (string m_input_ = ""; m_input_ != "BACK"; )
 						{
-							std::cout << "\n" << movieHelp << "\n\"" << movie->getTitle() << ",\" a \"" << movie->getGenre() << "\" movie\n";
+							std::cout << "\n" << movieHelp << "\n\"" << movie->getTitle() << "\", a \"" << movie->getGenre() << "\" movie\n";
 							std::cout << "Enter command (\"BACK\" to go back to movie selection):";
 							std::getline(std::cin, m_input_);
 							if (m_input_ == "show actors")
@@ -731,11 +731,6 @@ int main(int argc, char * argv[])
 		{
 			int size = AllActors_.size();
 			int number = 0;
-			for (sp_Actor sel : AllActors_)
-			{
-				std::cout << number << ".:" << sel->getName() << "\n";
-				++number;
-			}
 			if (size == 0)
 				std::cout << "No Actors! You may want to create a new one...\n";
 			else
@@ -743,6 +738,11 @@ int main(int argc, char * argv[])
 				int selected = size;
 				do
 				{
+					for (sp_Actor sel : AllActors_)
+					{
+						std::cout << number << ".:" << sel->getName() << "\n";
+						++number;
+					}
 					std::cout << "See portfolios:\nSelect an actor by typing their number (\"-1\" to return to main menu):";
 					selected = size;
 					std::cin >> selected;

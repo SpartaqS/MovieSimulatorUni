@@ -12,21 +12,21 @@ void Actor::quitMovie(const string& movie_name)
 			quitMovie(sel_movie);
 }*/
 
-void Actor::quitMovie(sp_Movie movie)
+void Actor::quitMovie(wp_Movie movie)
 {
-	if (movie->isWorkingForThisMovie(me_.lock())) //if not: do nothing
+	if (movie.lock()->isWorkingForThisMovie(me_.lock())) //if not: do nothing
 	{
-		for (sp_Character sel_character : movie->getCharacters())
+		for (sp_Character sel_character : movie.lock()->getCharacters())
 			sel_character->actorRemove(me_.lock());
-		movie->getCast().erase(me_.lock());
-		portfolio.erase(movie);
+		movie.lock()->getCast().erase(me_.lock());
+		portfolio.erase(movie.lock());
 	}
 }
 
-void Actor::movieAdd(sp_Movie movie)
+void Actor::movieAdd(wp_Movie movie)
 {
-	portfolio.insert(movie);
-	movie->getCast().insert(me_.lock());
+	portfolio.insert(movie.lock());
+	movie.lock()->getCast().insert(me_.lock());
 }
 
 /*Actor::~Actor()
