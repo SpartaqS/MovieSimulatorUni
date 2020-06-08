@@ -28,12 +28,13 @@ public:
 	string getDescription() const { return description; }; // raw description getter
 	/* description modifying is not planned because methods to actually do so would be too complicated to use and make the code needlessly too long */
 	sp_CharactersVector getSceneCharacters() const { return scene_characters; }; // scene_characters getter
+	sp_DirectorsList getSceneDirectorsList() const { return scene_directors; }; // scene_directors getter
+	static size_t specialCharactersInString(const string& str); // count the number of occurences of special "%c" substring in the string str
 private:
 	string name;
 	string description;
 	sp_CharactersVector scene_characters;
 	sp_DirectorsList scene_directors;
-	size_t charactersInDescription(); // count the number of occurences of special "%c" substring in the description
 };
 
 using sp_Scene = std::shared_ptr<Scene>;

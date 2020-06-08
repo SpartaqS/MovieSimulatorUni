@@ -1,7 +1,5 @@
 /* Actor declaration
 */
-#include <iostream>
-
 #include "actor.hpp"
 #include "movie.hpp"
 
@@ -18,7 +16,6 @@ void Actor::quitMovie(sp_Movie movie)
 {
 	if (movie->isWorkingForThisMovie(me_.lock())) //if not: do nothing
 	{
-		std::cout << "Actor leaving movie: " << name << "\n";
 		for (sp_Character sel_character : movie->getCharacters())
 			sel_character->actorRemove(me_.lock());
 		movie->getCast().erase(me_.lock());

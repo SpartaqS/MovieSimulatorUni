@@ -119,6 +119,9 @@ int main()
 	}
 	catch (std::runtime_error&) {}
 
+	if (movie1->getScenario().size() != 1)
+		std::cout << "Invalid scene was not deleted\n";
+
 	os << *movie1->scene("SC1Park1"); /* playing scene1, scene can be played because there is a director ,output should be:
 	Stephen and Bobby are entering the park
 	*/
