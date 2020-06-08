@@ -36,11 +36,9 @@ int main(int argc, char * argv[])
 		string enteredCommand = argv[1];
 		if (enteredCommand == "-h")
 		{
-			std::cout << "Gabriel Skowron-Rodriguez\n";
-			printf("_MSC_VER : %d \n", _MSC_VER);
-			printf("_MSC_FULL_VER : %d \n", _MSC_FULL_VER);
-			printf("_MSC_BUILD : %d \n", _MSC_BUILD);
-			std::cout << "Main Menu commands:\n" << menuHelp << "Movie Commands:\n" << movieHelp << "Character Commands:\n" << characterHelp;
+			std::cout << "Gabriel Skowron-Rodriguez, modified on 08.06.2020 using:\n";
+			std::cout << "_MSC_VER : 1916 \n_MSC_FULL_VER : 191627035 \n_MSC_BUILD : 0 \n";
+			std::cout << "Main Menu commands:\n" << menuHelp << "Movie Commands:\n" << movieHelp << "Character Commands:\n" << characterHelp << "Scene Commands:\n" << sceneHelp;
 			return 0;
 		}
 	}
