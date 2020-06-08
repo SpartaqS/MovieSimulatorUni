@@ -20,9 +20,9 @@ bool SelectMovieCharacter(sp_Movie movie, sp_Character& selectedCharacter);
 
 int main(int argc, char * argv[])
 {
-	string menuHelp = "\nAvaliable commands:\n show movies\n add movie\n show actorss\n add actor\n show directors\n add director\n EXIT";
-	string movieHelp = "\nAvaliable commands:\n fire actor\n add actor\n show actors\n fire director\n add director\n show directors\n delete character\n create character\n show characters\n credits";
-	string characterHelp = "\nAvaliable commands:\n remove actor\n add actor\n show actors\n set name\n set description";
+	string menuHelp = "\nAvaliable commands:\n show movies\n add movie\n show actors\n add actor\n show directors\n add director\n EXIT\n";
+	string movieHelp = "\nAvaliable commands:\n fire actor\n add actor\n show actors\n fire director\n add director\n show directors\n delete character\n create character\n show characters\n credits\n BACK\n";
+	string characterHelp = "\nAvaliable commands:\n remove actor\n add actor\n show actors\n set name\n set description\n BACK\n";
 	sp_MovieVector AllMovies_;
 	sp_ActorVector AllActors_;
 	sp_DirectorVector AllDirectors_;
@@ -38,14 +38,15 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	//AllMovies_.push_back(Movie::createMovie("testTitle", "testGenre"));
-	//AllActors_.push_back(Actor::createActor("testActor"));
-	//AllDirectors_.push_back(Director::createDirector("testDirector"));
+	AllMovies_.push_back(Movie::createMovie("testTitle", "testGenre"));
+	AllActors_.push_back(Actor::createActor("testActor"));
+	AllActors_.push_back(Actor::createActor("testActor2"));
+	AllDirectors_.push_back(Director::createDirector("testDirector"));
 
 	std::cout << "Welcome to the interactive stuff\n";
 	for (string input_ = ""; input_ != "EXIT"; )
 	{
-		std::cout << "MAIN MENU:\n";
+		std::cout << menuHelp << "MAIN MENU:\n";
 		std::cout << "Enter command:";
 		std::getline(std::cin, input_);
 		if (input_ == "show movies")
@@ -75,11 +76,12 @@ int main(int argc, char * argv[])
 					else if (selected < size && selected >= 0) // Do stuff with movies
 					{
 						sp_Movie movie = AllMovies_[selected];
-						std::cout <<"\n"<< movie->getTitle() << ",\" a \"" << movie->getGenre() << "\" movie\n";
 						// DO INTERACTIONS
+						string buffer_clearer;
+						std::getline(std::cin, buffer_clearer); // clearing the buffer (not doing so causes "double input")
 						for (string m_input_ = ""; m_input_ != "BACK"; )
 						{
-							std::cout << movieHelp << "\nmovie:\"" << movie->getTitle() << "\"\n";
+							std::cout << "\n" << movieHelp << "\n\"" <<movie->getTitle() << ",\" a \"" << movie->getGenre() << "\" movie\n";
 							std::cout << "Enter command (\"BACK\" to go back to movie selection):";
 							std::getline(std::cin, m_input_);
 							if (m_input_ == "show actors")
@@ -95,7 +97,7 @@ int main(int argc, char * argv[])
 									std::cout << "No actors employed!\n";
 								}
 							}
-							if (m_input_ == "fire actor")
+							else if (m_input_ == "fire actor")
 							{
 								sp_Actor toFire;
 								if(movie->getCast().size() > 0)
@@ -116,35 +118,52 @@ int main(int argc, char * argv[])
 									}
 								}
 							}
-							if (m_input_ == "add actor")
+							else if (m_input_ == "add actor")
 							{
-								int AllActors_size = AllActors_.size();
+								sp_ActorsList AllNotMovieActorsTemp_; // temporary vector of Actors who are not employed in this movie
+								sp_ActorVector ActorsToRemove;
+								std::copy(AllActors_.begin(), AllActors_.end(), std::back_inserter(AllNotMovieActorsTemp_));
+								for (sp_Actor inMovie : movie->getCast()) // removing all actors from who already work in this movie 
+								{
+									for (sp_Actor toKickout : AllNotMovieActorsTemp_)
+									{
+										if (toKickout == inMovie)
+										{
+											AllNotMovieActorsTemp_.remove(toKickout); // remove the actor from temporary list
+											break;
+										}
+									}
+								}
+								sp_ActorVector AllNotMovieActors_;
+								std::copy(AllNotMovieActorsTemp_.begin(), AllNotMovieActorsTemp_.end(), std::back_inserter(AllNotMovieActors_)); // convert list to vector for easier management
+								AllNotMovieActorsTemp_.clear(); // dispose of temporary pointers
+								int AllNotMovieActors_size = AllNotMovieActors_.size();
 								int number = 0;
-								for (sp_Actor sel : AllActors_)
+								for (sp_Actor sel : AllNotMovieActors_)
 								{
 									std::cout << number << ".:" << sel->getName() << "\n";
 									++number;
 								}
-								if (AllActors_size == 0)
+								if (AllNotMovieActors_size == 0)
 									std::cout << "No Actors! You may want to create a new one...\n";
 								else
 								{
-									int sel_actor = AllActors_size;
+									int sel_actor = AllNotMovieActors_size;
 									do
 									{
 										std::cout << "Select an actor to employ by typing their number (\"-1\" to return to movie menu):";
-										sel_actor = AllActors_size;
+										sel_actor = AllNotMovieActors_size;
 										std::cin >> sel_actor;
-										if (sel_actor >= AllActors_size)
+										if (sel_actor >= AllNotMovieActors_size)
 										{
 											std::cout << "inserted number is too large!\n";
 										}
-										else if (sel_actor < AllActors_size && sel_actor >= 0)
+										else if (sel_actor < AllNotMovieActors_size && sel_actor >= 0)
 										{
-											if (movie->isWorkingForThisMovie(AllActors_[sel_actor]) == false)
+											if (movie->isWorkingForThisMovie(AllNotMovieActors_[sel_actor]) == false)
 											{
-												movie->employ(AllActors_[sel_actor]);
-												std::cout << AllActors_[sel_actor]->getName() << " employed successfully\n";
+												movie->employ(AllNotMovieActors_[sel_actor]);
+												std::cout << AllNotMovieActors_[sel_actor]->getName() << " employed successfully\n";
 												sel_actor = -1;
 											}
 											else
@@ -157,7 +176,7 @@ int main(int argc, char * argv[])
 									std::cout << "Returning to movie menu\n";
 								}
 							}
-							if (m_input_ == "show directors")
+							else if (m_input_ == "show directors")
 							{
 								if (movie->getDirectors().size() > 0)
 								{
@@ -170,7 +189,7 @@ int main(int argc, char * argv[])
 									std::cout << "No directors employed!\n";
 								}
 							}
-							if (m_input_ == "fire director")
+							else if (m_input_ == "fire director")
 							{
 								sp_Director toFire;
 								if (movie->getDirectors().size() > 0)
@@ -191,11 +210,28 @@ int main(int argc, char * argv[])
 									}
 								}
 							}
-							if (m_input_ == "add director")
+							else if (m_input_ == "add director")
 							{
-								int AllDirectors_size = AllDirectors_.size();
+							sp_DirectorsList AllNotMovieDirectorsTemp_; // temporary vector of Actors who are not employed in this movie
+							sp_DirectorVector ActorsToRemove;
+							std::copy(AllDirectors_.begin(), AllDirectors_.end(), std::back_inserter(AllNotMovieDirectorsTemp_));
+							for (sp_Director inMovie : movie->getDirectors()) // removing all actors from who already work in this movie 
+							{
+								for (sp_Director toKickout : AllNotMovieDirectorsTemp_)
+								{
+									if (toKickout == inMovie)
+									{
+										AllNotMovieDirectorsTemp_.remove(toKickout); // remove the actor from temporary list
+										break;
+									}
+								}
+							}
+							sp_DirectorVector AllNotMovieDirectors_;
+							std::copy(AllNotMovieDirectorsTemp_.begin(), AllNotMovieDirectorsTemp_.end(), std::back_inserter(AllNotMovieDirectors_)); // convert list to vector for easier management
+							AllNotMovieDirectorsTemp_.clear(); // dispose of temporary pointers
+								int AllDirectors_size = AllNotMovieDirectors_.size();
 								int number = 0;
-								for (sp_Director sel : AllDirectors_)
+								for (sp_Director sel : AllNotMovieDirectors_)
 								{
 									std::cout << number << ".:" << sel->getName() << "\n";
 									++number;
@@ -216,10 +252,10 @@ int main(int argc, char * argv[])
 										}
 										else if (sel_director < AllDirectors_size && sel_director >= 0)
 										{
-											if (movie->isWorkingForThisMovie(AllDirectors_[sel_director]) == false)
+											if (movie->isWorkingForThisMovie(AllNotMovieDirectors_[sel_director]) == false)
 											{
-												movie->employ(AllDirectors_[sel_director]);
-												std::cout << AllDirectors_[sel_director]->getName() << " employed successfully\n";
+												movie->employ(AllNotMovieDirectors_[sel_director]);
+												std::cout << AllNotMovieDirectors_[sel_director]->getName() << " employed successfully\n";
 												sel_director = -1;
 											}
 											else
@@ -232,16 +268,18 @@ int main(int argc, char * argv[])
 									std::cout << "Returning to movie menu\n";
 								}
 							}
-							if (m_input_ == "show characters")
+							else if (m_input_ == "show characters")
 							{
 								if (movie->getCharacters().size() > 0)
 								{
 									std::cout << "Movie Characters:\n";
-									for (sp_Character sel : movie->getCharacters())
-										std::cout << "  " << sel->getName() << "\n";
+									//for (sp_Character sel : movie->getCharacters())
+									//	std::cout << "  " << sel->getName() << "\n";
 									sp_Character selectedCharacter;
 									if (SelectMovieCharacter(movie, selectedCharacter))
 									{
+										string buffer_clearer;
+										std::getline(std::cin, buffer_clearer); // clearing the buffer (not doing so causes "double input")
 										for (string c_input_ = ""; c_input_ != "BACK"; )
 										{
 											std::cout << characterHelp << "\ncharacter:\"" << selectedCharacter->getName() << "\"\n";
@@ -258,7 +296,7 @@ int main(int argc, char * argv[])
 													std::cout << toRemove->getName() << " no longer plays the role of " << selectedCharacter->getName() << "\n";
 												}
 											}
-											if (c_input_ == "add actor")
+											else if (c_input_ == "add actor")
 											{
 												sp_Actor toAdd;
 												if (movie->getCast().size() > 0)
@@ -269,7 +307,7 @@ int main(int argc, char * argv[])
 													std::cout << toAdd->getName() << " now plays the role of " << selectedCharacter->getName() << "\n";
 												}
 											}
-											if (c_input_ == "show actors")
+											else if (c_input_ == "show actors")
 											{
 												std::cout << "actors playing this as " << selectedCharacter->getName() << "\n";
 												for (sp_Actor temp : selectedCharacter->getActorsList())
@@ -277,21 +315,30 @@ int main(int argc, char * argv[])
 													std::cout << "  " << temp->getName() << "\n";
 												}
 											}
-											if (c_input_ == "set name")
+											else if (c_input_ == "set name")
 											{
 												string c_name_input_ = "";
 												std::cout << "Enter new name for this character:";
 												std::getline(std::cin, c_name_input_);
 												if (c_name_input_ != "")
 												{
-													selectedCharacter->setName(c_name_input_);
+													bool is_c_name_valid = true;
+													for (sp_Character selected : movie->getCharacters())
+													{
+														if (selected->getName() == c_name_input_)
+															is_c_name_valid = false;
+													}
+													if (is_c_name_valid)
+														selectedCharacter->setName(c_name_input_);
+													else
+														std::cout << "There already exists a character with name:\"" << c_name_input_ << "\"! Name setting cancelled!";
 												}
 												else
 												{
 													std::cout << "Name setting cancelled!";
 												}
 											}
-											if (c_input_ == "set description")
+											else if (c_input_ == "set description")
 											{
 												string c_description_input_ = "";
 												std::cout << "Enter new description for this character:";
@@ -309,6 +356,11 @@ int main(int argc, char * argv[])
 											{
 												std::cout << "Detected \"BACK\" command, returning to movie menu.\n";
 											}
+											// did not recognize the command
+											else
+											{
+												std::cout << "Unkown command:\"" << c_input_ << "\" try again\n";
+											}
 										}
 									}
 									else
@@ -321,7 +373,7 @@ int main(int argc, char * argv[])
 									std::cout << "This movie has no characters!\n";
 								}
 							}
-							if (m_input_ == "delete character")
+							else if (m_input_ == "delete character")
 							{
 								sp_Character toDelete;
 								if (SelectMovieCharacter(movie, toDelete))
@@ -334,18 +386,33 @@ int main(int argc, char * argv[])
 									std::cout << "Deletion cancelled\n";
 								}
 							}
-							if (m_input_ == "create character")
+							else if (m_input_ == "create character")
 							{
-								std::cout << "Creating a new character.\nEnter the name:";
-								string name;
-								std::getline(std::cin, name);
-								std::cout << "Enter the description:";
-								string description;
-								std::getline(std::cin, description);
+								string name = "";
+								while (name == "")
+								{
+									std::cout << "Creating a new character.\nEnter the name:";
+									std::getline(std::cin, name);
+								}
+								string description = "";
+								while (description == "")
+								{
+									std::cout << "Enter the description:";
+									std::getline(std::cin, description);
+								}
 								movie->characterCreate(name, description);
-								std::cout << "New character called:\"" << name << "\" described as: \"" << description << "\" created successfuly!\n";
+								std::cout << "New character called:\"" << movie->getCharacters().back()->getName() << "\" described as: \"" << description << "\" created successfuly!\n";
+								if (movie->getCharacters().back()->getName() != name)
+									std::cout << "Warning! Character with provided name already exists. The newest character has been renamed to: \"" << movie->getCharacters().back()->getName() << "\"\n";
 							}
-							if (m_input_ == "credits") 
+							else if (m_input_ == "play")
+							{
+								std::stringstream os;
+								os.str("");
+								movie->play(os);
+								std::cout << os.str();
+							}
+							else if (m_input_ == "credits")
 							{
 								std::stringstream os;
 								os.str("");
@@ -355,6 +422,11 @@ int main(int argc, char * argv[])
 							else if (m_input_ == "BACK")
 							{
 								std::cout << "Detected \"BACK\" command, returning to movie selection.\n";
+							}
+							// did not recognize the command
+							else
+							{
+							std::cout << "Unkown command:\"" << m_input_ << "\" try again\n";
 							}
 						}
 					}
@@ -573,7 +645,7 @@ bool SelectMovieCharacter(sp_Movie movie, sp_Character& selectedCharacter) // tr
 	}
 	for (sp_Character sel : Characters_) // display all characters
 	{
-		std::cout << "  " << sel->getName() << "\n";
+		std::cout << "  \"" << sel->getName() << "\"\n";
 	}
 	bool selected = false;
 	string c_name = "";

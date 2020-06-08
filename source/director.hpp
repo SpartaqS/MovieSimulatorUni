@@ -29,7 +29,6 @@ public:
 	//virtual ~Director(); // destructor -> calls all portfolio movies to act accordingly
 private:
 	string name;
-	sp_MovieSet portfolio;
 	wp_Director me_;
 };
 #endif // !director_hpp

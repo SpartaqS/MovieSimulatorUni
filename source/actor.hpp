@@ -29,7 +29,6 @@ public:
 	//virtual ~Actor(); // destructor -> calls all portfolio movies to act accordingly
 private:
 	string name;
-	sp_MovieSet portfolio;
 	wp_Actor me_;
 };
 

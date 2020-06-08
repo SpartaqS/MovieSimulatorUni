@@ -43,8 +43,9 @@ public:
 	virtual void movieAdd(sp_Movie movie); // add "movie" to the portfolio !!! this should only be called by Movie::employ()
 private:
 	string name;
-	sp_MovieSet portfolio;
 	wp_Person me_;
+protected:
+	sp_MovieSet portfolio;
 };
 
 #endif // !person_hpp
