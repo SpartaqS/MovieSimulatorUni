@@ -13,6 +13,7 @@ using sp_DirectorVector = std::vector<sp_Director>;
 using sp_CharacterVector = std::vector<sp_Character>;
 
 bool SelectEmployedActor(sp_Movie movie, sp_Actor& selectedActor);
+bool SelectCharacterActor(sp_Character character, sp_Actor& selectedActor);
 bool SelectEmployedDirector(sp_Movie movie, sp_Director& selectedDirector);
 bool SelectMovieCharacter(sp_Movie movie, sp_Character& selectedCharacter);
 
@@ -21,7 +22,7 @@ bool SelectMovieCharacter(sp_Movie movie, sp_Character& selectedCharacter);
 int main(int argc, char * argv[])
 {
 	string menuHelp = "\nAvaliable commands:\n show movies\n add movie\n show actors\n add actor\n show directors\n add director\n EXIT\n";
-	string movieHelp = "\nAvaliable commands:\n fire actor\n add actor\n show actors\n fire director\n add director\n show directors\n delete character\n create character\n show characters\n credits\n BACK\n";
+	string movieHelp = "\nAvaliable commands:\n fire actor\n add actor\n swap roles\n show actors\n fire director\n add director\n show directors\n delete character\n create character\n show characters\n credits\n BACK\n";
 	string characterHelp = "\nAvaliable commands:\n remove actor\n add actor\n show actors\n set name\n set description\n BACK\n";
 	sp_MovieVector AllMovies_;
 	sp_ActorVector AllActors_;
@@ -39,9 +40,14 @@ int main(int argc, char * argv[])
 	}
 
 	AllMovies_.push_back(Movie::createMovie("testTitle", "testGenre"));
-	AllActors_.push_back(Actor::createActor("testActor"));
-	AllActors_.push_back(Actor::createActor("testActor2"));
+	AllActors_.push_back(Actor::createActor("Adam Actual"));
+	AllActors_.push_back(Actor::createActor("Berry Bronzesmith"));
 	AllDirectors_.push_back(Director::createDirector("testDirector"));
+	AllMovies_.front()->characterCreate("Gillian", "Super soldier");
+	AllMovies_.front()->characterCreate("Edward", "Super hero");
+	AllMovies_.front()->characterCreate("Josh", "Super citizen");
+	for (sp_Actor temp : AllActors_)
+		AllMovies_.front()->employ(temp);
 
 	std::cout << "Welcome to the interactive stuff\n";
 	for (string input_ = ""; input_ != "EXIT"; )
@@ -176,6 +182,26 @@ int main(int argc, char * argv[])
 									std::cout << "Returning to movie menu\n";
 								}
 							}
+							else if (m_input_ == "swap roles")
+							{
+								sp_Actor toSwap1,toSwap2;
+								if (movie->getCast().size() > 0)
+									std::cout << "Choose an actor to swap\n";
+								if (SelectEmployedActor(movie, toSwap1) == true)
+								{
+									std::cout << "Choose the second actor to swap\n";
+									if (SelectEmployedActor(movie, toSwap2) == true)
+									{
+										if (toSwap1 == toSwap2)
+											std::cout << "Selected the same actor twice! Returning to previous menu";
+										else
+										{
+											movie->actorRoleSwap(toSwap1, toSwap2);
+											std::cout << "Swapped roles of " << toSwap1->getName() << " and " << toSwap2->getName() << "\n";
+										}
+									}
+								}
+							}
 							else if (m_input_ == "show directors")
 							{
 								if (movie->getDirectors().size() > 0)
@@ -288,22 +314,35 @@ int main(int argc, char * argv[])
 											if (c_input_ == "remove actor") 
 											{
 												sp_Actor toRemove;
-												if (movie->getCast().size() > 0)
-													std::cout << "Choose an actor to remove from playing as " << selectedCharacter->getName() << "\n";
-												if (SelectEmployedActor(movie, toRemove) == true)
+												if (selectedCharacter->getActorsList().size() > 0)
 												{
-													selectedCharacter->actorRemove(toRemove);
-													std::cout << toRemove->getName() << " no longer plays the role of " << selectedCharacter->getName() << "\n";
+													std::cout << "Choose an actor to remove from playing as " << selectedCharacter->getName() << "\n";
+													if (SelectCharacterActor(selectedCharacter, toRemove) == true)
+													{
+														selectedCharacter->actorRemove(toRemove);
+														std::cout << toRemove->getName() << " no longer plays the role of " << selectedCharacter->getName() << "\n";
+													}
+												}
+												else
+												{
+													std::cout << "No actors play this character! You may want to assign at least one...\n";
 												}
 											}
 											else if (c_input_ == "add actor")
 											{
 												sp_Actor toAdd;
 												if (movie->getCast().size() > 0)
-													std::cout << "Choose an actor to add assign the role of"<< selectedCharacter->getName() <<"\n";
+													std::cout << "Choose an actor to add assign the role of "<< selectedCharacter->getName() <<"\n";
 												if (SelectEmployedActor(movie, toAdd) == true)
 												{
-													selectedCharacter->actorAdd(toAdd);
+													try {
+														selectedCharacter->actorAdd(toAdd);
+													}
+													catch (std::runtime_error)
+													{
+														std::cout << "Chosen Actor already plays this role! Cancelling...\n";
+														break;
+													}
 													std::cout << toAdd->getName() << " now plays the role of " << selectedCharacter->getName() << "\n";
 												}
 											}
@@ -593,7 +632,43 @@ bool SelectEmployedActor(sp_Movie movie, sp_Actor& selectedActor) // true - succ
 			return true;
 		}
 	} while (selected >= 0);
-	std::cout << "Cancelled selection! Returning to prevoius menu\n";
+	std::cout << "Cancelled selection! Returning to previous menu\n";
+	return false;
+}
+
+bool SelectCharacterActor(sp_Character character, sp_Actor& selectedActor) // true - success, false - error
+{
+	sp_ActorVector Cast_;
+	std::copy(character->getActorsList().begin(), character->getActorsList().end(), std::back_inserter(Cast_)); // copying set to temporary vector for easier use
+	int size = Cast_.size();
+	int number = 0;
+	if (size == 0)
+	{
+		std::cout << "No Actors! You may want to assign one to this character...\n";
+		return false;
+	}
+	for (sp_Actor sel : Cast_) // display all actors playing this character
+	{
+		std::cout << "  " << number << ".:" << sel->getName() << "\n";
+		++number;
+	}
+	int selected = size;
+	do
+	{
+		std::cout << "Select an actor by typing their number (\"-1\" to cancel and return to main menu):";
+		selected = size;
+		std::cin >> selected;
+		if (selected >= size)
+		{
+			std::cout << "inserted number is too large!\n";
+		}
+		else if (selected < size && selected >= 0)
+		{
+			selectedActor = Cast_[selected];
+			return true;
+		}
+	} while (selected >= 0);
+	std::cout << "Cancelled selection! Returning to previous menu\n";
 	return false;
 }
 
