@@ -4,6 +4,7 @@
 #include <sstream> // to test returned "ostream"s
 #include "movie.hpp"
 
+// Stuff needed for interactive mode START
 #include <algorithm>
 #include <vector>
 using sp_MovieVector = std::vector<sp_Movie>;
@@ -15,17 +16,31 @@ bool SelectEmployedActor(sp_Movie movie, sp_Actor& selectedActor);
 bool SelectEmployedDirector(sp_Movie movie, sp_Director& selectedDirector);
 bool SelectMovieCharacter(sp_Movie movie, sp_Character& selectedCharacter);
 
-int main()
+// Stuff needed for interactive mode END
+
+int main(int argc, char * argv[])
 {
-	string movieHelp = "\nAvaliable commands:\n fire actor\n add actor\n show actors\n fire director\n add director\n show directors\n delete character\n create character\n show characters";
+	string menuHelp = "\nAvaliable commands:\n show movies\n add movie\n show actorss\n add actor\n show directors\n add director\n EXIT";
+	string movieHelp = "\nAvaliable commands:\n fire actor\n add actor\n show actors\n fire director\n add director\n show directors\n delete character\n create character\n show characters\n credits";
 	string characterHelp = "\nAvaliable commands:\n remove actor\n add actor\n show actors\n set name\n set description";
 	sp_MovieVector AllMovies_;
 	sp_ActorVector AllActors_;
 	sp_DirectorVector AllDirectors_;
 
-	AllMovies_.push_back(Movie::createMovie("testTitle", "testGenre"));
-	AllActors_.push_back(Actor::createActor("testActor"));
-	AllDirectors_.push_back(Director::createDirector("testDirector"));
+	if (argc == 2)
+	{
+		string enteredCommand = argv[1];
+		if (enteredCommand == "-h")
+		{
+			std::cout << "Gabriel Skowron-Rodriguez\n";
+			std::cout << "Main Menu commands:\n" << menuHelp << "Movie Commands:\n" << movieHelp << "Character Commands:\n" << characterHelp;
+			return 0;
+		}
+	}
+
+	//AllMovies_.push_back(Movie::createMovie("testTitle", "testGenre"));
+	//AllActors_.push_back(Actor::createActor("testActor"));
+	//AllDirectors_.push_back(Director::createDirector("testDirector"));
 
 	std::cout << "Welcome to the interactive stuff\n";
 	for (string input_ = ""; input_ != "EXIT"; )
@@ -329,6 +344,13 @@ int main()
 								std::getline(std::cin, description);
 								movie->characterCreate(name, description);
 								std::cout << "New character called:\"" << name << "\" described as: \"" << description << "\" created successfuly!\n";
+							}
+							if (m_input_ == "credits") 
+							{
+								std::stringstream os;
+								os.str("");
+								movie->credits(os);
+								std::cout << os.str();
 							}
 							else if (m_input_ == "BACK")
 							{
