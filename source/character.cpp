@@ -2,17 +2,6 @@
 
 Character::Character(const string & c_name, const string & c_descr) : name(c_name) , description(c_descr) {}
 
-/*Character::Character(const Character & character) : name(character.name) , description(character.description)
-{
-	actors = character.actors;
-}
-
-Character & Character::operator=(const Character & character)
-{
-	// TODO: tu wstawiæ instrukcjê return
-	return *this;
-}*/
-
 Character::~Character()
 {
 	// I guess this is empty because smart pointers can manage themselves
@@ -33,7 +22,7 @@ void Character::actorAdd(const sp_Actor new_c_actor)
 	for (sp_Actor selected : actors) // checking if we are adding a new actor to the list
 	{
 		if (selected == new_c_actor)
-			throw std::exception("Exception: Character::addActor : cannot add an Actor twice to a character");
+			throw std::runtime_error("Exception: Character::addActor : cannot add an Actor twice to a character");
 	}
 	// new_c_actor not found in list, adding
 	actors.push_back(new_c_actor);

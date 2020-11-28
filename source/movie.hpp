@@ -1,5 +1,5 @@
 /* Movie:
-	Consists of Scenes, Characters , and team (Actors and Directors)
+	Consists of Scenes, Characters , and cast (Actors and Directors)
 	The owner od Scenes and Characters
 	Manages scenes, can be played (streams all scenes in chronological order)
 */
@@ -9,16 +9,21 @@
 #include <exception>
 #include "scene.hpp"
 
-class Movie : std::enable_shared_from_this<Movie>
+class Movie
 {
 public:
+	static sp_Movie createMovie(const string& m_title, const string& m_genre)
+	{
+		sp_Movie movie = std::make_shared<Movie>(m_title,m_genre);
+		movie->me_ = movie;
+		return movie;
+	}
 	Movie(const string& m_title, const string& m_genre); //constructor
-	//Movie(const Movie& movie); // copy constructor
-	//Movie& operator= (const Movie& movie); // assignment operator
+	// operator= and copy c-tor make no sense here
 	~Movie(); //destructor
 	/* Actor/Director adding/removing */
-	void employ(sp_Person person); // add an person to team (actors: allow them to play characters, directors : allow them directing scenes), if person already in team : throw exception
-	void fire(sp_Person person); // remove the person from the team, call critical methods to handle this situation, if person nonexistent in team : throw exception
+	void employ(wp_Person person); // add the person to the movie (actors: allow them to play characters, directors : allow them directing scenes), if person already in cast : throw exception
+	void fire(wp_Person person); // remove the person from the movie, call critical methods to handle this situation, if person not working for this movie : do nothing
 	/* Actor Management */
 	void actorRoleSwap(const sp_Actor actor1, const sp_Actor actor2); // swap all occurences of actor1 and actor2 in characters (list)
 	/* Character Management */
@@ -42,25 +47,26 @@ public:
 	void setTitle(const string& m_new_title); // title setter
 	string getGenre() const { return genre; }; // genre getter
 	void setGenre(const string& m_new_genre); // genre setter
-	sp_ScenesList getScenario() { return scenario; }; //scenario (scene list) getter
-	sp_CharactersList getCharacters() { return characters; }; // characters getter
-	sp_PersonsSet getCast() { return team; }; // team (person list) getter
+	sp_ScenesList& getScenario() { return scenario; }; //scenario (scene list) getter/setter
+	sp_CharactersList& getCharacters() { return characters; }; // characters getter/setter
+	sp_ActorsSet& getCast() { return cast; }; // cast (Actor set) getter/setter
+	sp_DirectorsSet& getDirectors() { return directors; } // directors (Director set) getter/setter
+	sp_PersonsSet& getMisc() { return misc; }; // misc (Person set) getter/setter
+
+	bool isWorkingForThisMovie(wp_Actor person);
+	bool isWorkingForThisMovie(wp_Director person);
 private:
 	string title;
 	string genre;
 	sp_ScenesList scenario;
 	sp_CharactersList characters;
-	sp_PersonsSet team;
+	sp_ActorsSet cast;
+	sp_DirectorsSet directors;
+	sp_PersonsSet misc;
 	bool isDuplicateCharacterByName(string c_name, unsigned int copy_num);
 	bool isDuplicateSceneByName(string s_name, unsigned int copy_num);
 	bool isCharacterInScenario(const string& c_name);
-	bool isInTeam(sp_Person person);
-	personType recognizePersonRole(sp_Person person); //check if this person is an Actor, Director or just base Person
+	wp_Movie me_;
 };
-
-
-using string = std::string;
-//using sp_Movie = std::shared_ptr<Movie>;
-//using sp_MovieList = std::list<sp_Movie>;
 
 #endif // !movie_hpp

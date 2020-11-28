@@ -12,8 +12,7 @@ class Character
 {
 public:
 	Character(const string &c_name, const string &c_descr); //constructor
-	//Character(const Character& character); // copy constructor
-	//Character& operator=(const Character& character); //assignment operator
+	// operator= and copy c-tor make no sense here
 	~Character(); //destructor -> calls parent movie to handle the problem
 	void setName(const string &new_c_name); // change the name of a character, if there is no character with name == c_name : throw exception
 	void setDescription(const string &new_c_descr); // modify the description of a character, if there is no character wiht name == c_name : throw exception

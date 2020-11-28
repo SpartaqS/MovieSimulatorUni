@@ -8,26 +8,15 @@
 
 Scene::Scene(const string& s_name, const string& s_desc, sp_Director director, sp_CharactersVector& characters) : name(s_name), description(s_desc), scene_characters(characters)
 {
-	if ( charactersInDescription() != scene_characters.size() ) // handling incorrect number of "%s" and characters in pass_characters
-		throw std::exception("Number of characters in scene.description is different than number of given character pointers.");
 	directorAdd(director);
+	if (specialCharactersInString(description) != scene_characters.size() ) // handling incorrect number of "%s" and characters in pass_characters
+		throw std::runtime_error("Number of characters in scene.description is different than number of given character pointers.");
 }
 
 Scene::Scene(const string& s_name, const string& s_desc, sp_Director director) : name(s_name), description(s_desc)
 {
 	directorAdd(director);
 }
-
-/*Scene::Scene(const Scene& scene) : name(scene.name), description(scene.description), scene_characters(scene.scene_characters), scene_directors(scene.scene_directors) {}
-
-Scene& Scene::operator=(const Scene& scene)
-{
-	name = scene.name;
-	description = scene.description;
-	scene_characters = scene.scene_characters;
-	scene_directors = scene.scene_directors;
-	return *this;
-}*/
 
 Scene::~Scene()
 {
@@ -68,6 +57,11 @@ void Scene::replace(unsigned int number, sp_Character withWhom)
 
 void Scene::directorAdd(sp_Director director)
 {
+	for (sp_Director selected : scene_directors) // checking if we are adding a new actor to the list
+	{
+		if (selected == director)
+			throw std::runtime_error("Exception: Scene::addDirector : cannot add a Director twice to a scene");
+	}
 	scene_directors.push_back(director);
 }
 
@@ -76,11 +70,11 @@ void Scene::directorRemove(sp_Director s_director)
 	scene_directors.remove(s_director);
 }
 
-size_t Scene::charactersInDescription()
+size_t Scene::specialCharactersInString(const string & str)
 {
 	size_t foundCount = 0;
 	string::size_type pos = 0;
-	while ((pos = description.find("%c", pos)) != string::npos) {
+	while ((pos = str.find("%c", pos)) != string::npos) {
 		++foundCount;
 		pos += 2;
 	}
