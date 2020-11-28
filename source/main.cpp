@@ -1,5 +1,8 @@
 /* Preliminary Project : Interactive Mode
-	SpartaqS */
+	DO NOT COMPILE TOGETHER WITH "test.cpp" - both files define the main() function.
+	SpartaqS
+	This is a very basic interactive mode. See unit tests (file "test.cpp") to see all implemented functionalities
+	*/
 #include <iostream>
 #include <sstream> // to test returned "ostream"s
 #include "movie.hpp"
