@@ -1,5 +1,5 @@
 /* Preliminary Project : Interactive Mode
-	Gabriel Skowron-Rodriguez */
+	SpartaqS */
 #include <iostream>
 #include <sstream> // to test returned "ostream"s
 #include "movie.hpp"
