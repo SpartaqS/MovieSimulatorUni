@@ -1,5 +1,7 @@
 /* Preliminary Project : Testing
-	SpartaqS */
+	SpartaqS 
+	It was assumed during the project that this file should not be compiled together with "main.cpp" (the interactive version), but it was not explicitly commented
+	*/
 
 #include <iostream>
 #include <sstream> // to test returned "ostream"s
